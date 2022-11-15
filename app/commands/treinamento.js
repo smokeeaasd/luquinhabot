@@ -1,0 +1,10 @@
+const { SlashCommandBuilder } = require("discord.js");
+
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName("treinamento")
+		.setDescription("inicia um treinamento"),
+	async execute(interaction) {
+		
+	}
+}
