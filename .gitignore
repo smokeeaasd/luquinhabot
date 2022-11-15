@@ -1,6 +1,1 @@
 node_modules
-app/config.json
-package.json
-package-lock.json
-app/database/luquinha.sqlite
-app/database/comandos.sqlite3
