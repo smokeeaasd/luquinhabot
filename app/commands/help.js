@@ -7,11 +7,10 @@ module.exports = {
 
 	async execute(interaction) {
 		const HelpEmbed = new EmbedBuilder({
-			color: Colors.Aqua,
+			color: Colors.DarkPurple,
 			title: "Comandos",
 			fields: [
-				{name: "/daily", value: "Receba a sua recompensa diária."},
-				{name: "/dalle", value: "Gerar imagem baseada em prompt"},
+				{name: "/missao", value: "Iniciar ou coletar uma missão"},
 				{name: "/google", value: "Fazer uma pesquisa no Google."},
 				{name: "/ping", value: "Verificar o ping do bot"},
 				{name: "/roll", value: "Girar um dado"}
