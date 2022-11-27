@@ -35,7 +35,7 @@ module.exports = {
 					description: "Parabéns, você completou a missão!",
 					fields: [
 						{
-							name: "Nome da missão",
+							name: "Missão",
 							value: `${mission.mission_name}`
 						},
 						{

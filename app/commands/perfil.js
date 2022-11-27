@@ -37,16 +37,16 @@ module.exports = {
 			title: `Perfil de: ${userInfo.tag}`,
 			fields: [
 				{
-					name: "Moedas:",
+					name: "Moedas",
 					value: `**${userInfo.coins}** moedas.`
 				},
 				{
-					name: "Missões:",
+					name: "Missões",
 					value: `Este usuário já concluiu **${userInfo.missions}** missões.`
 				},
 				{
 					name: `Classe: ${userDB.class_name}`,
-					value: `"${userDB.class_description}"`
+					value: `*${userDB.class_description}*`
 				}
 			],
 			footer: {

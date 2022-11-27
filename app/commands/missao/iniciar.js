@@ -37,7 +37,7 @@ module.exports = {
 			description: `Duração: **${randomMission.duration_mins} minutos**`,
 			fields: [
 				{
-					name: "Nome da missão",
+					name: "Missão",
 					value: `${randomMission.mission_name}`,
 					inline: false
 				},
