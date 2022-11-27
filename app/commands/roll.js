@@ -3,7 +3,7 @@ const { SlashCommandBuilder, EmbedBuilder, Colors } = require("discord.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("roll")
-		.setDescription("girar um dado")
+		.setDescription("Girar um dado.")
 		.addNumberOption((number) => {
 			number.setName("lados");
 			number.setDescription("Número de lados do dado.")
@@ -17,14 +17,14 @@ module.exports = {
 		number = number ?? 6;
 		let roll = Math.floor(Math.random() * number) + 1;
 
-		const RollEmbed = new EmbedBuilder({
+		const rollEmbed = new EmbedBuilder({
 			color: Colors.Gold,
 			title: `Resultado: ${roll}`,
 			description: "Isso é bom ou ruim? É você quem decide."
 		});
 
 		await interaction.reply({
-			embeds: [RollEmbed]
+			embeds: [rollEmbed]
 		})
 	}
 }

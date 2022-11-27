@@ -8,14 +8,14 @@ module.exports = {
 
 		// se o usuário não estiver em nenhuma missão
 		if (mission == null) {
-			const InexistentMissionEmbed = new EmbedBuilder({
+			const nullMissionEmbed = new EmbedBuilder({
 				color: Colors.Red,
 				title: "Você não está em uma missão",
 				description: "Utilize (/missao iniciar) para começar uma missão."
 			});
 
 			await interaction.reply({
-				embeds: [InexistentMissionEmbed]
+				embeds: [nullMissionEmbed]
 			});
 
 			return;
@@ -24,7 +24,7 @@ module.exports = {
 			if (Date.now() > mission.mission_finish) {
 				let reward = Math.ceil(((mission.duration_mins * 200) * (1 + Math.random())) * mission.multiplier);
 
-				const MissionRewardEmbed = new EmbedBuilder({
+				const missionRewardEmbed = new EmbedBuilder({
 					color: Colors.DarkPurple,
 					title: "Missão concluída",
 					thumbnail: {
@@ -35,12 +35,12 @@ module.exports = {
 					description: "Parabéns, você completou a missão!",
 					fields: [
 						{
-							name: "Código da missão",
-							value: `#${mission.id} - ${mission.mission_name}`
+							name: "Nome da missão",
+							value: `${mission.mission_name}`
 						},
 						{
 							name: "Recompensa",
-							value: `${reward} Moedas **[Multiplicador ${mission.multiplier}x]**`
+							value: `**${reward}$** com um Multiplicador **${mission.multiplier}x**`
 						},
 					],
 					footer: {
@@ -51,7 +51,7 @@ module.exports = {
 				Model.addCoins(interaction.user.id, reward);
 				Model.completeMission(interaction.user.id);
 				await interaction.reply({
-					embeds: [MissionRewardEmbed]
+					embeds: [missionRewardEmbed],
 				});
 
 				const checkClass = require("./checkClass.js");
@@ -60,7 +60,7 @@ module.exports = {
 			} else {  // Se a missão ainda não acabou
 				let remaining = mission.mission_finish - Date.now() + 1000 // cooldown em ms + 1seg;
 
-				const InProgressEmbed = new EmbedBuilder({
+				const inProgressEmbed = new EmbedBuilder({
 					color: Colors.DarkRed,
 					title: "Você ainda não terminou a missão!",
 					description: "Aguarde o fim da missão para receber as recompensas.",
@@ -70,7 +70,7 @@ module.exports = {
 				});
 
 				await interaction.reply({
-					embeds: [InProgressEmbed]
+					embeds: [inProgressEmbed],
 				});
 
 				return;

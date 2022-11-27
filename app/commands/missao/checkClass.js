@@ -48,6 +48,10 @@ module.exports = {
 				case 100:
 					await classLevelUp(interaction, user, 5);
 				break;
+
+				case 200:
+					await classLevelUp(interaction, user, 6);
+				break;
 			}
 		}
 	}

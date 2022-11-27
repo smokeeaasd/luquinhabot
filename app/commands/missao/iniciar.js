@@ -7,7 +7,7 @@ module.exports = {
 			const mission = Model.getUserMission(interaction.user.id);
 			let remaining = mission.mission_finish - Date.now() + 1000 // cooldown em ms + 1seg;
 
-			const AlreadyAtMissionEmbed = new EmbedBuilder({
+			const alreadyAtMissionEmbed = new EmbedBuilder({
 				color: Colors.DarkRed,
 				title: "Você já está em uma missão!",
 				description: (remaining > 0) ? "Espere a missão anterior terminar!" : "Colete as recompensas da missão anterior para iniciar uma nova missão.",
@@ -17,7 +17,7 @@ module.exports = {
 			});
 
 			await interaction.reply({
-				embeds: [AlreadyAtMissionEmbed]
+				embeds: [alreadyAtMissionEmbed]
 			});
 
 			return;
@@ -26,7 +26,7 @@ module.exports = {
 		let randomMission = Model.getRandomMission();
 		let user = Model.getUserAndClass(interaction.user.id);
 
-		const StartMissionEmbed = new EmbedBuilder({
+		const startMissionEmbed = new EmbedBuilder({
 			color: Colors.DarkPurple,
 			title: "Você entrou em uma missão!",
 			thumbnail: {
@@ -37,8 +37,8 @@ module.exports = {
 			description: `Duração: **${randomMission.duration_mins} minutos**`,
 			fields: [
 				{
-					name: "Código da missão",
-					value: `#${randomMission.id} - ${randomMission.mission_name}`,
+					name: "Nome da missão",
+					value: `${randomMission.mission_name}`,
 					inline: false
 				},
 				{
@@ -46,8 +46,8 @@ module.exports = {
 					value: `*${randomMission.mission_description}*`
 				},
 				{
-					name: `Sua classe: ${user.class_name}`,
-					value: `**Descrição:** *${user.class_description}*`
+					name: `Classe: ${user.class_name}`,
+					value: `*${user.class_description}*`
 				}
 			],
 			footer: {
@@ -56,7 +56,7 @@ module.exports = {
 		});
 
 		await interaction.reply({
-			embeds: [StartMissionEmbed]
+			embeds: [startMissionEmbed]
 		});
 
 		// add usuario em User_Missions

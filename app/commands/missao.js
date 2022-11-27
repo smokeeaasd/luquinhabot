@@ -4,7 +4,7 @@ const { Model } = require("../database/dbModel.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("missao")
-		.setDescription("Você tem interesse em participar de uma missão?")
+		.setDescription("Gerenciar uma missão.")
 		.addSubcommand(subcmd => {
 			subcmd.setName("iniciar");
 			subcmd.setDescription("inicia uma nova missão");

@@ -10,7 +10,7 @@ module.exports = {
 	 */
 	async execute(client) {
 		console.log(`Pronto! Logado como ${client.user.tag}`);
-
+		
 		client.user.setPresence({
 			activities: [
 				{

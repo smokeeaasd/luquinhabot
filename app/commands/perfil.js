@@ -4,7 +4,7 @@ const { Model } = require("../database/dbModel.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("perfil")
-		.setDescription("Veja o perfil de um usuário")
+		.setDescription("Verificar o perfil de um usuário.")
 		.addUserOption(user => {
 			user.setName("usuario");
 			user.setDescription("Escolha um usuário");
@@ -27,7 +27,7 @@ module.exports = {
 			missions: userDB.missions_count.toString(),
 		}
 
-		const UserEmbed = new EmbedBuilder({
+		const userEmbed = new EmbedBuilder({
 			color: Colors.DarkPurple,
 			description: `Biografia: \`${userDB.bio ?? "Vazio."}\``,
 			author: {
@@ -55,7 +55,7 @@ module.exports = {
 		});
 
 		await interaction.reply({
-			embeds: [UserEmbed]
+			embeds: [userEmbed]
 		});
 	}
 }

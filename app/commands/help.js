@@ -1,23 +1,36 @@
-const { SlashCommandBuilder, EmbedBuilder, Colors } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, Colors, REST, Routes } = require("discord.js");
+const config = require("../config.json");
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("ajuda")
-		.setDescription("Está com dúvida? Eu te ajudo!"),
+		.setDescription("Lista de comandos."),
 
 	async execute(interaction) {
-		const HelpEmbed = new EmbedBuilder({
-			color: Colors.Aqua,
-			title: "Comandos",
-			fields: [
-				{name: "/daily", value: "Receba a sua recompensa diária."},
-				{name: "/dalle", value: "Gerar imagem baseada em prompt"},
-				{name: "/google", value: "Fazer uma pesquisa no Google."},
-				{name: "/ping", value: "Verificar o ping do bot"},
-				{name: "/roll", value: "Girar um dado"}
-			]
+		let commands = [];
+		for (let i of interaction.client.commands)
+		{
+			let command = i[1]['data'];
+
+			const commandData = {
+				name: `/${command['name']}`,
+				value: command['description']
+			}
+
+			commands.push(commandData);
+		}
+
+		const commandList = new EmbedBuilder({
+			color: Colors.DarkPurple,
+			title: "Lista de comandos",
+			description: "Aqui está a lista de comandos!",
+
+			fields: commands
 		});
 
-		return await interaction.reply({embeds: [HelpEmbed]})
+		await interaction.reply({
+			embeds: [commandList],
+			ephemeral: true,
+		})
 	}
 }
