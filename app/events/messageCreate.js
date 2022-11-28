@@ -1,4 +1,4 @@
-const { Events } = require("discord.js");
+const { Events, EmbedBuilder, Colors } = require("discord.js");
 const { Model } = require("../database/dbModel");
 
 module.exports = {

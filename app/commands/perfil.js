@@ -13,49 +13,27 @@ module.exports = {
 	
 	/** @param {import("discord.js").Interaction} interaction */
 	async execute(interaction) {
+		await interaction.deferReply();
 		/** @type {User} */
 		const user = interaction.options.getUser("usuario") ?? interaction.user;
 
 		Model.tryAddUser(user.id);		
+
 		const userDB = Model.getUserAndClass(user.id);
 
 		const userInfo = {
+			username: interaction.user.username,
 			tag: user.tag.toString(),
 			id: user.id.toString(),
 			avatar: user.avatarURL(),
 			coins: userDB.coins.toString(),
 			missions: userDB.missions_count.toString(),
+			wallpaper: userDB.active_wallpaper,
+			class: userDB.class_name
 		}
 
-		const userEmbed = new EmbedBuilder({
-			color: Colors.DarkPurple,
-			description: `Biografia: \`${userDB.bio ?? "Vazio."}\``,
-			author: {
-				name: userInfo.tag,
-				iconURL: userInfo.avatar,
-			},
-			title: `Perfil de: ${userInfo.tag}`,
-			fields: [
-				{
-					name: "Moedas",
-					value: `**${userInfo.coins}** moedas.`
-				},
-				{
-					name: "Missões",
-					value: `Este usuário já concluiu **${userInfo.missions}** missões.`
-				},
-				{
-					name: `Classe: ${userDB.class_name}`,
-					value: `*${userDB.class_description}*`
-				}
-			],
-			footer: {
-				text: `ID do usuário: ${userInfo.id}`
-			}
-		});
+		const sendProfile = require('./profile/sendProfile.js');
 
-		await interaction.reply({
-			embeds: [userEmbed]
-		});
+		await sendProfile.execute(interaction, userInfo, userDB);
 	}
 }

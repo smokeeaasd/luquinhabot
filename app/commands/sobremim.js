@@ -9,7 +9,7 @@ module.exports = {
 			bio.setName("bio");
 			bio.setDescription("Sua bio.")
 			bio.setMinLength(3);
-			bio.setMaxLength(200);
+			bio.setMaxLength(32);
 			bio.setRequired(true);
 			return bio;
 		}),

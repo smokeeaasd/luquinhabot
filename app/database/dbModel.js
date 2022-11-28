@@ -75,6 +75,22 @@ class Model {
 	static setClass(user_id, class_id) {
 		dbHelper.setClass(user_id, class_id);
 	}
+
+	static getWallpapers() {
+		return dbHelper.getWallpapers();
+	}
+
+	static getUserWallpaper(user_id) {
+		return dbHelper.getUserWallpaper(user_id);
+	}
+	
+	static setWallpaper(user_id, wallpaper_id) {
+		dbHelper.updateWallpaper(user_id, wallpaper_id);
+	}
+
+	static addWallpaperToUser(user_id, wallpaper_id) {
+		dbHelper.addWallpaperToUser(user_id, wallpaper_id);
+	}
 }
 
 module.exports = { Model }

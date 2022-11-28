@@ -22,12 +22,11 @@ class dbHelper {
 	/** Adicionar usuário no banco de dados.
 	 * @param {String} id
 	 */
-	static addUser(id)
-	{
+	static addUser(id) {
 		this.runTransaction(
 			[
 				db.prepare("INSERT INTO Users(id) VALUES(@id)"),
-				{id: id}
+				{ id: id }
 			]
 		);
 	}
@@ -36,32 +35,29 @@ class dbHelper {
 	 * Excluir usuário do banco por id
 	 * @param {String} id 
 	 */
-	static deleteUser(id)
-	{
+	static deleteUser(id) {
 		this.runTransaction(
 			[
 				db.prepare("DELETE FROM User_Mission WHERE id = @id"),
-				{id: id}
+				{ id: id }
 			],
 			[
 				db.prepare("DELETE FROM Users WHERE id = @id"),
-				{id: id}
+				{ id: id }
 			]
 		);
 	}
 
 	/** Receber a lista de missões */
-	static getMissions()
-	{
+	static getMissions() {
 		return db.prepare("SELECT Count(*) as count FROM Mission").get();
 	}
 
 	/** Obter uma missão aleatória */
-	static getRandomMission()
-	{
+	static getRandomMission() {
 		let count = this.getMissions().count;
 
-		let random = Math.ceil((Math.random()*count));
+		let random = Math.ceil((Math.random() * count));
 
 		return db.prepare("SELECT * from Mission WHERE id = ?").get(random);
 	}
@@ -70,22 +66,20 @@ class dbHelper {
 	 * Adicionar missão aleatória para usuário
 	 * @param {String} id 
 	 */
-	static addMissionToUser(id, mission_id, mission_finish)
-	{
+	static addMissionToUser(id, mission_id, mission_finish) {
 		this.runTransaction(
 			[
 				db.prepare("INSERT INTO User_Mission(id, mission_id, mission_finish) VALUES(@id, @mission_id, @mission_finish)"),
-				{id: id, mission_id: mission_id, mission_finish: mission_finish}
+				{ id: id, mission_id: mission_id, mission_finish: mission_finish }
 			]
 		);
 	}
 
-	static updateUserBio(id, bio)
-	{
+	static updateUserBio(id, bio) {
 		this.runTransaction(
 			[
 				db.prepare("UPDATE Users SET bio = @bio WHERE id = @id"),
-				{id: id, bio: bio}
+				{ id: id, bio: bio }
 			]
 		);
 	}
@@ -94,8 +88,7 @@ class dbHelper {
 	 * Retornar usuário por id
 	 * @param {String} id
 	 */
-	static getUserById(id)
-	{
+	static getUserById(id) {
 		return db.prepare("SELECT * FROM Users WHERE id = ?").get(id);
 	}
 
@@ -103,8 +96,7 @@ class dbHelper {
 	 * Retornar missões do usuário.
 	 * @param {String} id 
 	 */
-	static getUserMission(id)
-	{
+	static getUserMission(id) {
 		return db.prepare("SELECT m.*, um.*, u.*, c.* from User_Mission um JOIN Mission m on (um.mission_id = m.id) JOIN Users u on (u.id = um.id) JOIN Class c on (c.id = u.class_id) WHERE um.id = ?").get(id);
 	}
 
@@ -112,12 +104,11 @@ class dbHelper {
 	 * Aumentar número de missões em 1.
 	 * @param {String} id 
 	 */
-	static increaseUserMissions(id)
-	{
+	static increaseUserMissions(id) {
 		this.runTransaction(
 			[
 				db.prepare("UPDATE USERS SET missions_count = missions_count + 1 WHERE id = @id"),
-				{id: id}
+				{ id: id }
 			]
 		);
 	}
@@ -126,8 +117,7 @@ class dbHelper {
 	 * Verificar se o usuário completou alguma missão.
 	 * @param {String} id 
 	 */
-	static getCompletedMissions(id)
-	{
+	static getCompletedMissions(id) {
 		return db.prepare("SELECT * FROM User_Mission WHERE id = ? AND mission_finish < ?").get(id, Date.now());
 	}
 
@@ -135,12 +125,11 @@ class dbHelper {
 	 * Remove a missão atual de um usuário.
 	 * @param {String} id 
 	 */
-	static removeMission(id)
-	{
+	static removeMission(id) {
 		this.runTransaction(
 			[
 				db.prepare("DELETE FROM User_Mission WHERE id = @id"),
-				{id: id}
+				{ id: id }
 			]
 		);
 	}
@@ -150,12 +139,11 @@ class dbHelper {
 	 * @param {String} id 
 	 * @param {Number} coins 
 	 */
-	static increaseUserCoins(id, coins)
-	{
+	static increaseUserCoins(id, coins) {
 		this.runTransaction(
 			[
 				db.prepare("UPDATE Users SET coins = coins + @coins WHERE id = @id"),
-				{coins: coins, id: id}
+				{ coins: coins, id: id }
 			]
 		)
 	}
@@ -164,8 +152,7 @@ class dbHelper {
 	 * Obtém um usuário e a sua classe por id de usuário.
 	 * @param {String} id 
 	 */
-	static getUserAndClass(id)
-	{
+	static getUserAndClass(id) {
 		return db.prepare("SELECT u.*, c.* FROM Users u JOIN Class c on (c.id = u.class_id) WHERE u.id = ?").get(id);
 	}
 
@@ -194,7 +181,49 @@ class dbHelper {
 		this.runTransaction(
 			[
 				db.prepare("UPDATE Users SET class_id = @class_id WHERE id = @id"),
-				{class_id: class_id, id: id}
+				{ class_id: class_id, id: id }
+			]
+		);
+	}
+
+	/**
+	 * Retorna todos os papéis de parede
+	 */
+	static getWallpapers() {
+		return db.prepare("SELECT * FROM Wallpapers").all();
+	}
+
+	/**
+	 * Adiciona um wallpaper para um usuário
+	 * @param {String} id 
+	 * @param {Number} wallpaper_id 
+	 */
+	static addWallpaperToUser(id, wallpaper_id) {
+		this.runTransaction(
+			[
+				db.prepare("INSERT INTO User_Wallpapers(user_id, wallpaper_id) VALUES(@id, @wallpaper_id)"),
+				{ id: id, wallpaper_id: wallpaper_id }
+			]
+		);
+	}
+
+	/**
+	 * Retorna todos os wallpapers do usuário
+	 * @param {String} id 
+	 */
+	static getUserWallpapers(id) {
+		return db.prepare("SELECT * FROM User_Wallpapers WHERE id_user = ?").all(id);
+	}
+
+	/**
+	 * Alterar o papel de parede atual
+	 * @param {String} id
+	 */
+	static updateWallpaper(id, wallpaper) {
+		this.runTransaction(
+			[
+				db.prepare("UPDATE Users SET active_wallpaper = @wallpaper WHERE id = @id"),
+				{id: id, wallpaper: wallpaper}
 			]
 		);
 	}
