@@ -106,22 +106,6 @@ class Model {
 	static async setClass(user_id, class_id) {
 		await dbHelper.setClass(user_id, class_id);
 	}
-
-	static async getWallpapers() {
-		return await dbHelper.getWallpapers();
-	}
-
-	static async getUserWallpaper(user_id) {
-		return await dbHelper.getUserWallpaper(user_id);
-	}
-
-	static async setWallpaper(user_id, wallpaper_id) {
-		await dbHelper.updateWallpaper(user_id, wallpaper_id);
-	}
-
-	static async addWallpaperToUser(user_id, wallpaper_id) {
-		await dbHelper.addWallpaperToUser(user_id, wallpaper_id);
-	}
 }
 
 module.exports = { Model }
