@@ -13,13 +13,11 @@ module.exports = {
 	
 	/** @param {import("discord.js").Interaction} interaction */
 	async execute(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
-		// A interação pode levar mais tempo para resposta.
 		await interaction.deferReply();
-
+		/** @type {User} */
 		const user = interaction.options.getUser("usuario") ?? interaction.user;
 
-		Model.tryAddUser(user.id);
+		Model.tryAddUser(user.id);		
 
 		const userDB = Model.getUserAndClass(user.id);
 
@@ -27,12 +25,11 @@ module.exports = {
 			username: user.username,
 			tag: user.tag.toString(),
 			id: user.id.toString(),
-			bio: userDB.bio,
+			bio: userDB.bio.toString(),
 			avatar: user.avatarURL(),
 			coins: userDB.coins.toString(),
 			missions: userDB.missions_count.toString(),
 			wallpaper: userDB.active_wallpaper,
-			color: active_color.color_hex,
 			class: {
 				name: userDB.class_name,
 				description: userDB.class_description

@@ -1,7 +1,6 @@
-const { Events } = require("discord.js");
+const { Events, Colors, EmbedBuilder } = require("discord.js");
 const fs = require("node:fs");
 const path = require("node:path");
-const { Model } = require("../database/dbModel");
 
 module.exports = {
 	name: Events.InteractionCreate,
@@ -12,9 +11,6 @@ module.exports = {
 	 * @param {import("discord.js").Interaction} interaction 
 	 */
 	async execute(interaction) {
-
-		Model.tryAddUser(interaction.user.id);
-		
 		if (!interaction.isChatInputCommand())
 			return
 
@@ -26,7 +22,12 @@ module.exports = {
 			await command.execute(interaction);
 		} catch (error) {
 			console.error(error);
-			await interaction.reply({ content: 'Ocorreu um erro na execução do comando.', ephemeral: true });
+			const errEmbed = new EmbedBuilder({
+				color: Colors.DarkRed,
+				title: "Me desculpe",
+				description: "Ocorreu um erro! Estou em beta ainda."
+			});
+			await interaction.reply({ embeds: [errEmbed], ephemeral: true });
 		}
 	}
 }

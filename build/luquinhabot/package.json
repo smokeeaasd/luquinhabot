@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.30",
+    "better-sqlite3": "^7.6.2",
+    "discord.js": "^14.6.0"
+  },
+  "name": "luquinhabot",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "load-guild-cmds": "node app\\deploy-commands.js",
+    "load-global-cmds": "node app\\deploy-global-commands.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smokeeaasd/luquinhabot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/smokeeaasd/luquinhabot/issues"
+  },
+  "homepage": "https://github.com/smokeeaasd/luquinhabot#readme",
+  "description": ""
+}

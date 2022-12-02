@@ -1,5 +1,5 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { Model } = require("../database/dbModel.js");
+const { SlashCommandBuilder, EmbedBuilder, Colors, REST, Routes } = require("discord.js");
+const config = require("../config.json");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -7,7 +7,6 @@ module.exports = {
 		.setDescription("Lista de comandos."),
 
 	async execute(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
 		let commands = [];
 		for (let i of interaction.client.commands)
 		{
@@ -22,12 +21,12 @@ module.exports = {
 		}
 
 		const commandList = new EmbedBuilder({
+			color: Colors.DarkPurple,
 			title: "Lista de comandos",
 			description: "Aqui está a lista de comandos!",
 
 			fields: commands
 		});
-		commandList.setColor(active_color.color_hex);
 
 		await interaction.reply({
 			embeds: [commandList],

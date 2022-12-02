@@ -1,5 +1,5 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { Model } = require("../database/dbModel.js");
+const { SlashCommandBuilder, EmbedBuilder, Colors } = require("discord.js");
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("google")
@@ -14,18 +14,17 @@ module.exports = {
 		}),
 
 	async execute(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
 		let query = interaction.options.getString("pesquisa");
 		let searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
 
 		const searchEmbed = new EmbedBuilder({
+			color: Colors.DarkPurple,
 			title: "Aqui está a sua pesquisa!",
 			description: "Isso foi tão facil, você deveria fazer isso da proxima vez. :smile:",
 			fields: [
 				{ name: "URL", value: searchUrl, }
 			]
 		});
-		searchEmbed.setColor(active_color.color_hex);
 
 		await interaction.reply({
 			embeds: [searchEmbed]

@@ -22,15 +22,7 @@ class dbHelper {
 	static addUser(id) {
 		this.runTransaction(
 			[
-				db.prepare(
-					`INSERT INTO Users(id)
-					VALUES(@id)`),
-				{ id: id }
-			],
-			[
-				db.prepare(
-					`INSERT INTO User_Colors(id_user, id_color)
-					VALUES(@id, 1)`),
+				db.prepare("INSERT INTO Users(id) VALUES(@id)"),
 				{ id: id }
 			]
 		);
@@ -47,65 +39,10 @@ class dbHelper {
 				{ id: id }
 			],
 			[
-				db.prepare("DELETE FROM User_Colors WHERE id_user = @id"),
+				db.prepare("DELETE FROM Users WHERE id = @id"),
 				{ id: id }
 			]
-			[
-			db.prepare("DELETE FROM Users WHERE id = @id"),
-			{ id: id }
-			]
 		);
-	}
-
-	static getColorById(color_id) {
-		return db.prepare("SELECT * FROM Colors WHERE id = ?").get(color_id);
-	}
-
-	static getUserColors(id) {
-		return db.prepare(
-			`SELECT c.* FROM Colors c
-			JOIN User_Colors uc ON (uc.id_color = c.id)
-			WHERE uc.id_user = ?`).all(id);
-	}
-
-	static getNotUserColors(id) {
-		return db.prepare(
-			`SELECT c.* FROM Colors c
-			WHERE c.id NOT IN (
-				SELECT uc.id_color FROM User_Colors uc
-				WHERE uc.id_user = ?
-			)`).all(id);
-	}
-
-	static getActiveUserColor(id) {
-		return db.prepare(
-			`SELECT c.* FROM Colors c
-			JOIN Users u on (u.active_color_id = c.id)
-			WHERE u.id = ?`).get(id)
-	}
-
-	static addColorToUser(id, color_id) {
-		this.runTransaction(
-			[
-				db.prepare(
-					`INSERT INTO User_Colors(id_user, id_color)
-					VALUES (@id, @color_id)`),
-				{ id: id, color_id: color_id }
-			],
-		)
-	}
-
-	static changeUserColor(id, color_id) {
-		this.runTransaction(
-			[
-				db.prepare(
-					`UPDATE Users
-					SET active_color_id = @color_id
-					WHERE id = @id`
-				),
-				{ id: id, color_id: color_id }
-			]
-		)
 	}
 
 	/** Receber a lista de missões */
@@ -138,9 +75,7 @@ class dbHelper {
 	static updateUserBio(id, bio) {
 		this.runTransaction(
 			[
-				db.prepare(
-					`UPDATE Users
-					SET bio = @bio WHERE id = @id`),
+				db.prepare("UPDATE Users SET bio = @bio WHERE id = @id"),
 				{ id: id, bio: bio }
 			]
 		);
@@ -159,12 +94,7 @@ class dbHelper {
 	 * @param {String} id 
 	 */
 	static getUserMission(id) {
-		return db.prepare(
-			`SELECT m.*, um.*, u.*, c.* from User_Mission um
-			JOIN Mission m on (um.mission_id = m.id)
-			JOIN Users u on (u.id = um.id)
-			JOIN Class c on (c.id = u.class_id)
-			WHERE um.id = ?`).get(id);
+		return db.prepare("SELECT m.*, um.*, u.*, c.* from User_Mission um JOIN Mission m on (um.mission_id = m.id) JOIN Users u on (u.id = um.id) JOIN Class c on (c.id = u.class_id) WHERE um.id = ?").get(id);
 	}
 
 	/**
@@ -174,10 +104,7 @@ class dbHelper {
 	static increaseUserMissions(id) {
 		this.runTransaction(
 			[
-				db.prepare(
-					`UPDATE Users
-					SET missions_count = missions_count + 1
-					WHERE id = @id`),
+				db.prepare("UPDATE USERS SET missions_count = missions_count + 1 WHERE id = @id"),
 				{ id: id }
 			]
 		);
@@ -188,9 +115,7 @@ class dbHelper {
 	 * @param {String} id 
 	 */
 	static getCompletedMissions(id) {
-		return db.prepare(
-			`SELECT * FROM User_Mission
-			WHERE id = ? AND mission_finish < ?`).get(id, Date.now());
+		return db.prepare("SELECT * FROM User_Mission WHERE id = ? AND mission_finish < ?").get(id, Date.now());
 	}
 
 	/**
@@ -200,9 +125,7 @@ class dbHelper {
 	static removeMission(id) {
 		this.runTransaction(
 			[
-				db.prepare(
-					`DELETE FROM User_Mission
-					WHERE id = @id`),
+				db.prepare("DELETE FROM User_Mission WHERE id = @id"),
 				{ id: id }
 			]
 		);
@@ -216,10 +139,7 @@ class dbHelper {
 	static increaseUserCoins(id, coins) {
 		this.runTransaction(
 			[
-				db.prepare(
-					`UPDATE Users
-					SET coins = coins + @coins
-					WHERE id = @id`),
+				db.prepare("UPDATE Users SET coins = coins + @coins WHERE id = @id"),
 				{ coins: coins, id: id }
 			]
 		)
@@ -230,10 +150,7 @@ class dbHelper {
 	 * @param {String} id 
 	 */
 	static getUserAndClass(id) {
-		return db.prepare(
-			`SELECT u.*, c.* FROM Users u 
-			JOIN Class c on (c.id = u.class_id)
-			WHERE u.id = ?`).get(id);
+		return db.prepare("SELECT u.*, c.* FROM Users u JOIN Class c on (c.id = u.class_id) WHERE u.id = ?").get(id);
 	}
 
 	/**
@@ -249,9 +166,7 @@ class dbHelper {
 	 * @param {String} id 
 	 */
 	static getClassByID(id) {
-		return db.prepare(
-			`SELECT * FROM Class
-			WHERE id = ?`).get(id);
+		return db.prepare("SELECT * FROM Class WHERE id = ?").get(id);
 	}
 
 	/**
@@ -262,11 +177,50 @@ class dbHelper {
 	static setClass(id, class_id) {
 		this.runTransaction(
 			[
-				db.prepare(
-					`UPDATE Users
-					SET class_id = @class_id
-					WHERE id = @id`),
+				db.prepare("UPDATE Users SET class_id = @class_id WHERE id = @id"),
 				{ class_id: class_id, id: id }
+			]
+		);
+	}
+
+	/**
+	 * Retorna todos os papéis de parede
+	 */
+	static getWallpapers() {
+		return db.prepare("SELECT * FROM Wallpapers").all();
+	}
+
+	/**
+	 * Adiciona um wallpaper para um usuário
+	 * @param {String} id 
+	 * @param {Number} wallpaper_id 
+	 */
+	static addWallpaperToUser(id, wallpaper_id) {
+		this.runTransaction(
+			[
+				db.prepare("INSERT INTO User_Wallpapers(user_id, wallpaper_id) VALUES(@id, @wallpaper_id)"),
+				{ id: id, wallpaper_id: wallpaper_id }
+			]
+		);
+	}
+
+	/**
+	 * Retorna todos os wallpapers do usuário
+	 * @param {String} id 
+	 */
+	static getUserWallpapers(id) {
+		return db.prepare("SELECT * FROM User_Wallpapers WHERE id_user = ?").all(id);
+	}
+
+	/**
+	 * Alterar o papel de parede atual
+	 * @param {String} id
+	 */
+	static updateWallpaper(id, wallpaper) {
+		this.runTransaction(
+			[
+				db.prepare("UPDATE Users SET active_wallpaper = @wallpaper WHERE id = @id"),
+				{id: id, wallpaper: wallpaper}
 			]
 		);
 	}

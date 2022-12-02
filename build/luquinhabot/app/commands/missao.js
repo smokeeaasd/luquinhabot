@@ -18,6 +18,8 @@ module.exports = {
 
 	/** @param {import("discord.js").Interaction} interaction */
 	async execute(interaction) {
+		Model.tryAddUser(interaction.user.id);
+
 		const subCommand = interaction.options.getSubcommand();
 
 		if (subCommand == "iniciar") {

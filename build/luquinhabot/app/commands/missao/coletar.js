@@ -4,16 +4,15 @@ const { TimeUtils } = require("../../utils/time.js");
 
 module.exports = {
 	async run(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
 		const mission = Model.getUserMission(interaction.user.id);
 
 		// se o usuário não estiver em nenhuma missão
 		if (mission == null) {
 			const nullMissionEmbed = new EmbedBuilder({
+				color: Colors.Red,
 				title: "Você não está em uma missão",
 				description: "Utilize (/missao iniciar) para começar uma missão."
 			});
-			nullMissionEmbed.setColor(active_color.color_hex);
 
 			await interaction.reply({
 				embeds: [nullMissionEmbed]
@@ -26,6 +25,7 @@ module.exports = {
 				let reward = Math.ceil(((mission.duration_mins * 200) * (1 + Math.random())) * mission.multiplier);
 
 				const missionRewardEmbed = new EmbedBuilder({
+					color: Colors.DarkPurple,
 					title: "Missão concluída",
 					thumbnail: {
 						url: interaction.user.avatarURL(),
@@ -47,7 +47,6 @@ module.exports = {
 						text: `Você já completou ${mission.missions_count + 1} missões.`
 					}
 				});
-				missionRewardEmbed.setColor(active_color.color_hex);
 
 				Model.addCoins(interaction.user.id, reward);
 				Model.completeMission(interaction.user.id);
@@ -62,13 +61,13 @@ module.exports = {
 				let remaining = mission.mission_finish - Date.now() + 1000 // cooldown em ms + 1seg;
 
 				const inProgressEmbed = new EmbedBuilder({
+					color: Colors.DarkRed,
 					title: "Você ainda não terminou a missão!",
 					description: "Aguarde o fim da missão para receber as recompensas.",
 					footer: {
 						text: `Termina em ${TimeUtils.formatMS(remaining)}.`
 					}
 				});
-				inProgressEmbed.setColor(active_color.color_hex);
 
 				await interaction.reply({
 					embeds: [inProgressEmbed],

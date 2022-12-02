@@ -3,8 +3,6 @@ const { Model } = require("../../database/dbModel")
 
 module.exports = {
 	async run(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
-		
 		async function classLevelUp(interaction, user, class_id) {
 			Model.setClass(interaction.user.id, class_id);
 
@@ -24,7 +22,6 @@ module.exports = {
 					}
 				]
 			});
-			ClassUpEmbed.setColor(active_color.color_hex);
 
 			await interaction.followUp({
 				embeds: [ClassUpEmbed],

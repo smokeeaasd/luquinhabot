@@ -21,26 +21,6 @@ class Model {
 		return dbHelper.getUserById(user_id);
 	}
 
-	static getColorById(color_id) {
-		return dbHelper.getColorById(color_id);
-	}
-
-	static getUserColors(user_id) {
-		return dbHelper.getUserColors(user_id);
-	}
-
-	static getNotUserColors(user_id) {
-		return dbHelper.getNotUserColors(user_id);
-	}
-
-	static getUserActiveColor(user_id) {
-		return dbHelper.getActiveUserColor(user_id);
-	}
-
-	static changeUserColor(user_id, color_id) {
-		dbHelper.changeUserColor(user_id, color_id);
-	}
-
 	static isUserInMission(user_id) {
 		let mission = dbHelper.getUserMission(user_id);
 
@@ -103,7 +83,7 @@ class Model {
 	static getUserWallpaper(user_id) {
 		return dbHelper.getUserWallpaper(user_id);
 	}
-
+	
 	static setWallpaper(user_id, wallpaper_id) {
 		dbHelper.updateWallpaper(user_id, wallpaper_id);
 	}

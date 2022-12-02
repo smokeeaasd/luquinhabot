@@ -20,7 +20,7 @@ module.exports = {
 		// Fundo roxo.
 		ctx.beginPath();
 
-		ctx.fillStyle = userInfo.color;
+		ctx.fillStyle = "#8712e0";
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 		ctx.closePath();
@@ -57,8 +57,9 @@ module.exports = {
 		const attachment = new AttachmentBuilder(await canvas.encode("png"), {name: 'perfil.png'});
 
 		const UserProfile = new EmbedBuilder({
+			color: Colors.DarkPurple,
 			title: `Informações de ${userInfo.tag}`,
-			description: `**Bio: ** \`${userInfo.bio ?? "vazio"}\` `,
+			description: `**Bio: ** \`${userInfo.bio}\` `,
 			image: {
 				url: `attachment://${attachment.name}`
 			},
@@ -76,7 +77,6 @@ module.exports = {
 				}
 			]
 		});
-		UserProfile.setColor(userInfo.color);
 
 		await interaction.editReply({
 			embeds: [UserProfile],
