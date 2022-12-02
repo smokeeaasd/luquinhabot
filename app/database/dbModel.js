@@ -1,115 +1,126 @@
-const { dbHelper } = require("./dbHelper.js");
+const { dbHelper } = require("./await dbHelper.js");
 
 class Model {
-	static tryAddUser(user_id) {
-		let user = dbHelper.getUserById(user_id);
+	static async tryAddUser(user_id) {
+		let user = await dbHelper.getUserById(user_id);
 
 		if (user == null) {
-			dbHelper.addUser(user_id)
+			await dbHelper.addUser(user_id)
 		}
 	}
 
-	static tryRemoveUser(user_id) {
-		let user = dbHelper.getUserById(user_id);
+	static async tryRemoveUser(user_id) {
+		let user = await dbHelper.getUserById(user_id);
 
 		if (user != null) {
-			dbHelper.deleteUser(user_id)
+			await dbHelper.deleteUser(user_id)
 		}
 	}
 
-	static getUserById(user_id) {
-		return dbHelper.getUserById(user_id);
+	static async getUserById(user_id) {
+		return await dbHelper.getUserById(user_id);
 	}
 
-	static getColorById(color_id) {
-		return dbHelper.getColorById(color_id);
+	static async getColorById(color_id) {
+		return await dbHelper.getColorById(color_id);
 	}
 
-	static getUserColors(user_id) {
-		return dbHelper.getUserColors(user_id);
+	static async getUserColors(user_id) {
+		return await dbHelper.getUserColors(user_id);
 	}
 
-	static getNotUserColors(user_id) {
-		return dbHelper.getNotUserColors(user_id);
+	static async getNotUserColors(user_id) {
+		return await dbHelper.getNotUserColors(user_id);
 	}
 
-	static getUserActiveColor(user_id) {
-		return dbHelper.getActiveUserColor(user_id);
+	static async getUserActiveColor(user_id) {
+		return await dbHelper.getActiveUserColor(user_id);
 	}
 
-	static changeUserColor(user_id, color_id) {
-		dbHelper.changeUserColor(user_id, color_id);
+	static async changeUserColor(user_id, color_id) {
+		await dbHelper.changeUserColor(user_id, color_id);
+	}
+	
+	static async addColorToUser(user_id, color_id) {
+		let colors = await dbHelper.getUserColors(user_id);
+		
+		for (let color of colors) {
+			if (color.id == color_id) {
+				return;
+			}
+		}
+		await dbHelper.addColorToUser(user_id, color_id);
 	}
 
-	static isUserInMission(user_id) {
-		let mission = dbHelper.getUserMission(user_id);
+	static async isUserInMission(user_id) {
+		let mission = await dbHelper.getUserMission(user_id);
 
 		return (mission != null);
 	}
 
-	static getUserMission(user_id) {
-		return dbHelper.getUserMission(user_id);
+	static async getUserMission(user_id) {
+		return await dbHelper.getUserMission(user_id);
 	}
 
-	static completeMission(user_id) {
-		dbHelper.increaseUserMissions(user_id);
-		dbHelper.removeMission(user_id);
+	static async completeMission(user_id) {
+		await dbHelper.increaseUserMissions(user_id);
+		await dbHelper.removeMission(user_id);
 	}
 
-	static addMissionToUser(user_id, mission_id, mission_finish) {
-		dbHelper.addMissionToUser(user_id, mission_id, mission_finish);
+	static async addMissionToUser(user_id, mission_id, mission_finish) {
+		await dbHelper.addMissionToUser(user_id, mission_id, mission_finish);
 	}
 
-	static getRandomMission() {
-		return dbHelper.getRandomMission();
+	static async getRandomMission() {
+		return await dbHelper.getRandomMission();
 	}
 
-	static addCoins(user_id, coins) {
-		dbHelper.increaseUserCoins(user_id, coins);
+	static async addCoins(user_id, coins) {
+		await dbHelper.increaseUserCoins(user_id, coins);
 	}
 
-	static updateBio(user_id, bio) {
-		dbHelper.updateUserBio(user_id, bio);
+	static async updateBio(user_id, bio) {
+		await dbHelper.updateUserBio(user_id, bio);
 	}
 
-	static getUserAndClass(id) {
-		return dbHelper.getUserAndClass(id);
+	static async getUserAndClass(id) {
+		return await dbHelper.getUserAndClass(id);
 	}
 
-	static getClasses() {
-		return dbHelper.getClasses();
+	static async getClasses() {
+		return await dbHelper.getClasses();
 	}
 
-	static canClassUp(id) {
-		let user = dbHelper.getUserAndClass(id);
+	static async canClassUp(id) {
+		let user = await dbHelper.getUserAndClass(id);
 
 		let classes = this.getClasses();
 
 		return (user.class_id < classes.length);
 	}
 
-	static getClassByID(class_id) {
-		dbHelper.getClassByID(class_id);
+	static async getClassByID(class_id) {
+		await dbHelper.getClassByID(class_id);
 	}
 
-	static setClass(user_id, class_id) {
-		dbHelper.setClass(user_id, class_id);
+	static async setClass(user_id, class_id) {
+		await dbHelper.setClass(user_id, class_id);
 	}
 
-	static getWallpapers() {
-		return dbHelper.getWallpapers();
+	static async getWallpapers() {
+		return await dbHelper.getWallpapers();
 	}
 
-	static getUserWallpaper(user_id) {
-		return dbHelper.getUserWallpaper(user_id);
+	static async getUserWallpaper(user_id) {
+		return await dbHelper.getUserWallpaper(user_id);
 	}
 
-	static setWallpaper(user_id, wallpaper_id) {
-		dbHelper.updateWallpaper(user_id, wallpaper_id);
+	static async setWallpaper(user_id, wallpaper_id) {
+		await dbHelper.updateWallpaper(user_id, wallpaper_id);
 	}
 
-	static addWallpaperToUser(user_id, wallpaper_id) {
-		dbHelper.addWallpaperToUser(user_id, wallpaper_id);
+	static async addWallpaperToUser(user_id, wallpaper_id) {
+		await dbHelper.addWallpaperToUser(user_id, wallpaper_id);
 	}
 }
 

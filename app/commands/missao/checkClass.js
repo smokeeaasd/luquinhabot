@@ -38,22 +38,27 @@ module.exports = {
 			switch (user.missions_count) {
 				case 10:
 					await classLevelUp(interaction, user, 2);
+					Model.addColorToUser(interaction.user.id, 2)
 				break;
 
 				case 20:
 					await classLevelUp(interaction, user, 3);
+					Model.addColorToUser(interaction.user.id, 3)
 				break;
 
 				case 50:
 					await classLevelUp(interaction, user, 4);
+					Model.addColorToUser(interaction.user.id, 4)
 				break;
 
 				case 100:
 					await classLevelUp(interaction, user, 5);
+					Model.addColorToUser(interaction.user.id, 5)
 				break;
 
 				case 200:
 					await classLevelUp(interaction, user, 6);
+					Model.addColorToUser(interaction.user.id, 6)
 				break;
 			}
 		}
