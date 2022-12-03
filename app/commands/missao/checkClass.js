@@ -3,12 +3,12 @@ const { Model } = require("../../database/dbModel")
 
 module.exports = {
 	async run(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
+		let active_color = await Model.getUserActiveColor(interaction.user.id);
 		
 		async function classLevelUp(interaction, user, class_id) {
-			Model.setClass(interaction.user.id, class_id);
+			await Model.setClass(interaction.user.id, class_id);
 
-			const newUser = Model.getUserAndClass(interaction.user.id);
+			const newUser = await Model.getUserAndClass(interaction.user.id);
 			const ClassUpEmbed = new EmbedBuilder({
 				color: Colors.DarkPurple,
 				title: "Você subiu de classe!",
@@ -32,33 +32,33 @@ module.exports = {
 			});
 		}
 
-		const user = Model.getUserAndClass(interaction.user.id);
+		const user = await Model.getUserAndClass(interaction.user.id);
 
-		if (Model.canClassUp(interaction.user.id)) {
+		if (await Model.canClassUp(interaction.user.id)) {
 			switch (user.missions_count) {
 				case 10:
 					await classLevelUp(interaction, user, 2);
-					Model.addColorToUser(interaction.user.id, 2)
+					await Model.addColorToUser(interaction.user.id, 2)
 				break;
 
 				case 20:
 					await classLevelUp(interaction, user, 3);
-					Model.addColorToUser(interaction.user.id, 3)
+					await Model.addColorToUser(interaction.user.id, 3)
 				break;
 
 				case 50:
 					await classLevelUp(interaction, user, 4);
-					Model.addColorToUser(interaction.user.id, 4)
+					await Model.addColorToUser(interaction.user.id, 4)
 				break;
 
 				case 100:
 					await classLevelUp(interaction, user, 5);
-					Model.addColorToUser(interaction.user.id, 5)
+					await Model.addColorToUser(interaction.user.id, 5)
 				break;
 
 				case 200:
 					await classLevelUp(interaction, user, 6);
-					Model.addColorToUser(interaction.user.id, 6)
+					await Model.addColorToUser(interaction.user.id, 6)
 				break;
 			}
 		}
