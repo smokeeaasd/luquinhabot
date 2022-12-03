@@ -7,7 +7,7 @@ module.exports = {
 		.setDescription("Verificar a latência do bot"),
 
 	async execute(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
+		let active_color = await Model.getUserActiveColor(interaction.user.id);
 
 		const pingEmbed = new EmbedBuilder({
 			title: "Pong!",

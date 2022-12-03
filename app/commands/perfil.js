@@ -13,15 +13,15 @@ module.exports = {
 	
 	/** @param {import("discord.js").Interaction} interaction */
 	async execute(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
+		let active_color = await Model.getUserActiveColor(interaction.user.id);
 		// A interação pode levar mais tempo para resposta.
 		await interaction.deferReply();
 
 		const user = interaction.options.getUser("usuario") ?? interaction.user;
 
-		Model.tryAddUser(user.id);
+		await Model.tryAddUser(user.id);
 
-		const userDB = Model.getUserAndClass(user.id);
+		const userDB = await Model.getUserAndClass(user.id);
 
 		const userInfo = {
 			username: user.username,

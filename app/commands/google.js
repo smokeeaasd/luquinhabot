@@ -14,7 +14,7 @@ module.exports = {
 		}),
 
 	async execute(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
+		let active_color = await Model.getUserActiveColor(interaction.user.id);
 		let query = interaction.options.getString("pesquisa");
 		let searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
 

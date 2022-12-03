@@ -3,10 +3,10 @@ const { Model } = require('../../database/dbModel.js');
 const { TimeUtils } = require("../../utils/time.js");
 module.exports = {
 	async run(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
+		let active_color = await Model.getUserActiveColor(interaction.user.id);
 
-		if (Model.isUserInMission(interaction.user.id)) {
-			const mission = Model.getUserMission(interaction.user.id);
+		if (await Model.isUserInMission(interaction.user.id)) {
+			const mission = await Model.getUserMission(interaction.user.id);
 			let remaining = mission.mission_finish - Date.now() + 1000 // cooldown em ms + 1seg;
 
 			const alreadyAtMissionEmbed = new EmbedBuilder({
@@ -25,8 +25,8 @@ module.exports = {
 			return;
 		}
 
-		let randomMission = Model.getRandomMission();
-		let user = Model.getUserAndClass(interaction.user.id);
+		let randomMission = await Model.getRandomMission();
+		let user = await Model.getUserAndClass(interaction.user.id);
 
 		const startMissionEmbed = new EmbedBuilder({
 			title: "Você entrou em uma missão!",
@@ -62,6 +62,6 @@ module.exports = {
 		});
 
 		// add usuario em User_Missions
-		Model.addMissionToUser(interaction.user.id, randomMission.id, (Date.now() + (randomMission.duration_mins * 1000 * 60)));
+		await Model.addMissionToUser(interaction.user.id, randomMission.id, (Date.now() + (randomMission.duration_mins * 1000 * 60)));
 	}
 }
