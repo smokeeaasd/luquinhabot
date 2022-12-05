@@ -1,7 +1,5 @@
 const { Events } = require("discord.js");
-const fs = require("node:fs");
-const path = require("node:path");
-const { Model } = require("../database/dbModel");
+const { Model } = require("../database/model/dbModel");
 
 module.exports = {
 	name: Events.InteractionCreate,

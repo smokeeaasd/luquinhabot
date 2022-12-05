@@ -1,5 +1,5 @@
-const { SlashCommandBuilder, EmbedBuilder, Colors } = require("discord.js");
-const { Model } = require("../database/dbModel.js");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { Model } = require("../../database/model/dbModel.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -14,11 +14,11 @@ module.exports = {
 			return bio;
 		}),
 	async execute(interaction) {
-		let active_color = await Model.getUserActiveColor(interaction.user.id);
+		let active_color = Model.getUserActiveColor(interaction.user.id);
 		
 		let bio = interaction.options.getString("bio");
 		
-		await Model.updateBio(interaction.user.id, bio);
+		Model.updateBio(interaction.user.id, bio);
 
 		const changedBioEmbed = new EmbedBuilder({
 			title: "A sua bio foi alterada!",

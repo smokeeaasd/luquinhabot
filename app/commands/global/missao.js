@@ -1,5 +1,4 @@
-const { SlashCommandBuilder, Colors } = require("discord.js");
-const { Model } = require("../database/dbModel.js");
+const { SlashCommandBuilder } = require("discord.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

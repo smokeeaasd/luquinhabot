@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { Model } = require("../database/dbModel.js");
+const { Model } = require("../../database/model/dbModel.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -7,7 +7,7 @@ module.exports = {
 		.setDescription("Lista de comandos."),
 
 	async execute(interaction) {
-		let active_color = await Model.getUserActiveColor(interaction.user.id);
+		let active_color = Model.getUserActiveColor(interaction.user.id);
 		let commands = [];
 		for (let i of interaction.client.commands)
 		{

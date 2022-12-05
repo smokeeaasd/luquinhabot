@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { Model } = require("../database/dbModel.js");
+const { Model } = require("../../database/model/dbModel.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -14,7 +14,7 @@ module.exports = {
 			return number;
 		}),
 	async execute(interaction) {
-		let active_color = await Model.getUserActiveColor(interaction.user.id);
+		let active_color = Model.getUserActiveColor(interaction.user.id);
 		
 		let number = interaction.options.getNumber("lados");
 		number = number ?? 6;

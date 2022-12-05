@@ -7,13 +7,32 @@ module.exports = {
     async run(client) {
         client.commands = new Collection();
 
-        const commandsPath = path.join(__dirname, '../commands');
-        const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+        const guildCommandsPath = path.join(__dirname, '../commands/guild');
+		const globalCommandsPath = path.join(__dirname, '../commands/global');
 
-        for (const file of commandFiles) {
-            const filePath = path.join(commandsPath, file);
-            const command = require(filePath);
-            client.commands.set(command.data.name, command);
-        }
+        const guildCommandFiles = fs.readdirSync(guildCommandsPath).filter(file => file.endsWith('.js'));
+		const globalCommandFiles = fs.readdirSync(globalCommandsPath).filter(file => file.endsWith('.js'));
+
+		const commandFiles = [
+			{
+				path: guildCommandsPath,
+				files: guildCommandFiles
+			},
+			{
+				path: globalCommandsPath,
+				files: globalCommandFiles
+			}
+		];
+
+		for (const commandFile of commandFiles)
+		{
+			for (const file of commandFile.files)
+			{
+				console.log(`Carregando ${file}`);
+				const filePath = path.join(commandFile.path, file);
+				const command = require(filePath);
+				client.commands.set(command.data.name, command)
+			}
+		}
     }
 }

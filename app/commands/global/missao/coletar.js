@@ -1,11 +1,11 @@
-const { EmbedBuilder, Colors } = require("discord.js");
-const { Model } = require("../../database/dbModel.js");
-const { TimeUtils } = require("../../utils/time.js");
+const { EmbedBuilder } = require("discord.js");
+const { Model } = require("../../../database/model/dbModel.js");
+const { TimeUtils } = require("../../../utils/time.js");
 
 module.exports = {
 	async run(interaction) {
-		let active_color = await Model.getUserActiveColor(interaction.user.id);
-		const mission = await Model.getUserMission(interaction.user.id);
+		let active_color = Model.getUserActiveColor(interaction.user.id);
+		const mission = Model.getUserMission(interaction.user.id);
 
 		// se o usuário não estiver em nenhuma missão
 		if (mission == null) {
@@ -49,8 +49,8 @@ module.exports = {
 				});
 				missionRewardEmbed.setColor(active_color.color_hex);
 
-				await Model.addCoins(interaction.user.id, reward);
-				await Model.completeMission(interaction.user.id);
+				Model.addCoins(interaction.user.id, reward);
+				Model.completeMission(interaction.user.id);
 				await interaction.reply({
 					embeds: [missionRewardEmbed],
 				});

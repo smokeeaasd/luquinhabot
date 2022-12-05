@@ -1,7 +1,9 @@
 const Canvas = require("@napi-rs/canvas");
-const { Model } = require("./app/database/dbModel.js");
+const { Model } = require("./app/database/model/dbModel.js");
+const { dbHelper } = require("./app/database/helper/dbHelper.js");
 const path = require("path");
 
-for (let color of Model.getUserColors("637679977361309715")) {
-	console.log(color.id);
-};
+(async () => {
+	console.log(await Model.getUserActiveColor("637679977361309715"));
+	console.log(await Model.getRandomMission());
+})();

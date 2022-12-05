@@ -1,5 +1,4 @@
-const { Events, EmbedBuilder, Colors } = require("discord.js");
-const { Model } = require("../database/dbModel");
+const { Events } = require("discord.js");
 
 module.exports = {
 	name: Events.MessageCreate,

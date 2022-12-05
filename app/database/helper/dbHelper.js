@@ -1,7 +1,7 @@
 const SQLite = require("better-sqlite3");
 const path = require("path");
 
-const db = new SQLite(path.join(__dirname, 'luquinha.sqlite'));
+const db = new SQLite(path.join(__dirname, '../luquinha.sqlite'));
 
 const begin = db.prepare('BEGIN');
 const commit = db.prepare('COMMIT');
@@ -11,7 +11,7 @@ class dbHelper {
 	 * Rodar uma transação sqlite
 	 * @param  {...any} args
 	 */
-	static async runTransaction(...args) {
+	static runTransaction(...args) {
 		args.forEach(argument => {
 			begin.run();
 			argument[0].run(argument[1]);
@@ -19,7 +19,7 @@ class dbHelper {
 		});
 	}
 
-	static async addUser(id) {
+	static addUser(id) {
 		this.runTransaction(
 			[
 				db.prepare(
@@ -40,7 +40,7 @@ class dbHelper {
 	 * Excluir usuário do banco por id
 	 * @param {String} id 
 	 */
-	static async deleteUser(id) {
+	static deleteUser(id) {
 		this.runTransaction(
 			[
 				db.prepare("DELETE FROM User_Mission WHERE id = @id"),
@@ -57,18 +57,18 @@ class dbHelper {
 		);
 	}
 
-	static async getColorById(color_id) {
+	static getColorById(color_id) {
 		return db.prepare("SELECT * FROM Colors WHERE id = ?").get(color_id);
 	}
 
-	static async getUserColors(id) {
+	static getUserColors(id) {
 		return db.prepare(
 			`SELECT c.* FROM Colors c
 			JOIN User_Colors uc ON (uc.id_color = c.id)
 			WHERE uc.id_user = ?`).all(id);
 	}
 
-	static async getNotUserColors(id) {
+	static getNotUserColors(id) {
 		return db.prepare(
 			`SELECT c.* FROM Colors c
 			WHERE c.id NOT IN (
@@ -77,14 +77,14 @@ class dbHelper {
 			)`).all(id);
 	}
 
-	static async getActiveUserColor(id) {
+	static getActiveUserColor(id) {
 		return db.prepare(
 			`SELECT c.* FROM Colors c
 			JOIN Users u on (u.active_color_id = c.id)
 			WHERE u.id = ?`).get(id)
 	}
 
-	static async addColorToUser(id, color_id) {
+	static addColorToUser(id, color_id) {
 		this.runTransaction(
 			[
 				db.prepare(
@@ -95,7 +95,7 @@ class dbHelper {
 		)
 	}
 
-	static async changeUserColor(id, color_id) {
+	static changeUserColor(id, color_id) {
 		this.runTransaction(
 			[
 				db.prepare(
@@ -109,12 +109,12 @@ class dbHelper {
 	}
 
 	/** Receber a lista de missões */
-	static async getMissions() {
+	static getMissions() {
 		return db.prepare("SELECT Count(*) as count FROM Mission").get();
 	}
 
 	/** Obter uma missão aleatória */
-	static async getRandomMission() {
+	static getRandomMission() {
 		let count = this.getMissions().count;
 
 		let random = Math.ceil((Math.random() * count));
@@ -126,7 +126,7 @@ class dbHelper {
 	 * Adicionar missão aleatória para usuário
 	 * @param {String} id 
 	 */
-	static async addMissionToUser(id, mission_id, mission_finish) {
+	static addMissionToUser(id, mission_id, mission_finish) {
 		this.runTransaction(
 			[
 				db.prepare("INSERT INTO User_Mission(id, mission_id, mission_finish) VALUES(@id, @mission_id, @mission_finish)"),
@@ -135,7 +135,7 @@ class dbHelper {
 		);
 	}
 
-	static async updateUserBio(id, bio) {
+	static updateUserBio(id, bio) {
 		this.runTransaction(
 			[
 				db.prepare(
@@ -150,7 +150,7 @@ class dbHelper {
 	 * Retornar usuário por id
 	 * @param {String} id
 	 */
-	static async getUserById(id) {
+	static getUserById(id) {
 		return db.prepare("SELECT * FROM Users WHERE id = ?").get(id);
 	}
 
@@ -158,7 +158,7 @@ class dbHelper {
 	 * Retornar missões do usuário.
 	 * @param {String} id 
 	 */
-	static async getUserMission(id) {
+	static getUserMission(id) {
 		return db.prepare(
 			`SELECT m.*, um.*, u.*, c.* from User_Mission um
 			JOIN Mission m on (um.mission_id = m.id)
@@ -171,7 +171,7 @@ class dbHelper {
 	 * Aumentar número de missões em 1.
 	 * @param {String} id 
 	 */
-	static async increaseUserMissions(id) {
+	static increaseUserMissions(id) {
 		this.runTransaction(
 			[
 				db.prepare(
@@ -187,7 +187,7 @@ class dbHelper {
 	 * Verificar se o usuário completou alguma missão.
 	 * @param {String} id 
 	 */
-	static async getCompletedMissions(id) {
+	static getCompletedMissions(id) {
 		return db.prepare(
 			`SELECT * FROM User_Mission
 			WHERE id = ? AND mission_finish < ?`).get(id, Date.now());
@@ -197,7 +197,7 @@ class dbHelper {
 	 * Remove a missão atual de um usuário.
 	 * @param {String} id 
 	 */
-	static async removeMission(id) {
+	static removeMission(id) {
 		this.runTransaction(
 			[
 				db.prepare(
@@ -213,7 +213,7 @@ class dbHelper {
 	 * @param {String} id 
 	 * @param {Number} coins 
 	 */
-	static async increaseUserCoins(id, coins) {
+	static increaseUserCoins(id, coins) {
 		this.runTransaction(
 			[
 				db.prepare(
@@ -229,7 +229,7 @@ class dbHelper {
 	 * Obtém um usuário e a sua classe por id de usuário.
 	 * @param {String} id 
 	 */
-	static async getUserAndClass(id) {
+	static getUserAndClass(id) {
 		return db.prepare(
 			`SELECT u.*, c.* FROM Users u 
 			JOIN Class c on (c.id = u.class_id)
@@ -240,7 +240,7 @@ class dbHelper {
 	 * Retorna todas as classes
 	 * @returns 
 	 */
-	static async getClasses() {
+	static getClasses() {
 		return db.prepare("SELECT * FROM Class").all();
 	}
 
@@ -248,7 +248,7 @@ class dbHelper {
 	 * Retorna uma classe por ID
 	 * @param {String} id 
 	 */
-	static async getClassByID(id) {
+	static getClassByID(id) {
 		return db.prepare(
 			`SELECT * FROM Class
 			WHERE id = ?`).get(id);
@@ -259,7 +259,7 @@ class dbHelper {
 	 * @param {String} id 
 	 * @param {Number} class_id 
 	 */
-	static async setClass(id, class_id) {
+	static setClass(id, class_id) {
 		this.runTransaction(
 			[
 				db.prepare(
