@@ -61,6 +61,10 @@ class dbHelper {
 		return db.prepare("SELECT * FROM Colors WHERE id = ?").get(color_id);
 	}
 
+	static getColorByName(color_name) {
+		return db.prepare("SELECT * FROM Colors WHERE color_name = ?").get(color_name);
+	}
+
 	static getUserColors(id) {
 		return db.prepare(
 			`SELECT c.* FROM Colors c

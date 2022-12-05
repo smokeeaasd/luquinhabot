@@ -25,6 +25,11 @@ class Model {
 		return dbHelper.getColorById(color_id);
 	}
 
+	static getColorByName(color_name)
+	{
+		return dbHelper.getColorByName(color_name);
+	}
+
 	static getUserColors(user_id) {
 		return dbHelper.getUserColors(user_id);
 	}
