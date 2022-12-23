@@ -1,7 +1,8 @@
 const SQLite = require("better-sqlite3");
 const path = require("path");
 
-const db = new SQLite(path.join(__dirname, '../luquinha.sqlite'));
+const dbPath = path.join(__dirname, '../luquinha.sqlite')
+const db = new SQLite(dbPath);
 
 const begin = db.prepare('BEGIN');
 const commit = db.prepare('COMMIT');
@@ -162,7 +163,7 @@ class dbHelper {
 	 * Retornar missões do usuário.
 	 * @param {String} id 
 	 */
-	static getUserMission(id) {
+	static getUserMission(id) {;
 		return db.prepare(
 			`SELECT m.*, um.*, u.*, c.* from User_Mission um
 			JOIN Mission m on (um.mission_id = m.id)
@@ -212,6 +213,14 @@ class dbHelper {
 		);
 	}
 
+	static getMissionByID(id)
+	{
+		db.prepare(
+			`SELECT * FROM Mission
+			WHERE id = ?
+			`).get(id);
+	}
+
 	/**
 	 * Adiciona moedas para um usuário
 	 * @param {String} id 
@@ -235,7 +244,7 @@ class dbHelper {
 	 */
 	static getUserAndClass(id) {
 		return db.prepare(
-			`SELECT u.*, c.* FROM Users u 
+			`SELECT u.id as disc_id, u.*, c.* FROM Users u 
 			JOIN Class c on (c.id = u.class_id)
 			WHERE u.id = ?`).get(id);
 	}
@@ -253,9 +262,7 @@ class dbHelper {
 	 * @param {String} id 
 	 */
 	static getClassByID(id) {
-		return db.prepare(
-			`SELECT * FROM Class
-			WHERE id = ?`).get(id);
+		return db.prepare(`SELECT * FROM Class WHERE id = ?`).get(id);
 	}
 
 	/**
@@ -273,6 +280,55 @@ class dbHelper {
 				{ class_id: class_id, id: id }
 			]
 		);
+	}
+
+	/**
+	 * Atualiza a última coleta diária de um usuário
+	 * @param {String} id 
+	 */
+	static updateDaily(id) {
+		this.runTransaction(
+			[
+				db.prepare(
+					`UPDATE Users
+					SET last_daily = @last_daily
+					WHERE id = @id`),
+				{ last_daily: Date.now(), id: id }
+			]
+		)
+	}
+
+	/**
+	 * Adiciona um presente para um usuário
+	 * @param {String} id
+	 */
+	static addGiftToUser(id) {
+		this.runTransaction(
+			[
+				db.prepare(
+					`UPDATE Users
+					SET gifts = gifts + 1
+					WHERE @id = id`),
+				{ id: id }
+			]
+		)
+	}
+
+	/**
+	 * Remove uma quantia de presentes para um usuário
+	 * @param {String} id 
+	 * @param {Number} amount
+	 */	
+	static removeGiftFromUser(id, amount) {
+		this.runTransaction(
+			[
+				db.prepare(
+					`UPDATE Users
+					SET gifts = gifts - @amount
+					WHERE @id = id`),
+				{ id: id, amount: amount }
+			]
+		)
 	}
 }
 
