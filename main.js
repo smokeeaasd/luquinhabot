@@ -7,7 +7,7 @@ const { ShardingManager } = require('discord.js');
 const manager = new ShardingManager(path.join(path.join(__dirname, 'app'), 'bot.js'), { token: config.token });
 
 manager.on('shardCreate', shard => {
-	console.log(`[Shard ${shard.id}] Iniciado.`);
+	console.log(`[${new Date().toUTCString()}] Shard #${shard.id} iniciado.`);
 });
 
 manager.spawn();

@@ -28,10 +28,11 @@ module.exports = {
 		{
 			for (const file of commandFile.files)
 			{
-				console.log(`Carregando ${file}`);
+				console.log(`[${new Date().toUTCString()}] Carregando ${file}`);
 				const filePath = path.join(commandFile.path, file);
 				const command = require(filePath);
-				client.commands.set(command.data.name, command)
+				client.commands.set(command.data.name, command);
+				console.log(`[${new Date().toUTCString()}] ${file} foi carregado!`);
 			}
 		}
     }
