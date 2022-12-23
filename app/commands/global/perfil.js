@@ -13,8 +13,6 @@ module.exports = {
 	
 	/** @param {import("discord.js").Interaction} interaction */
 	async execute(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
-		
 		// A interação pode levar mais tempo para resposta.
 		await interaction.deferReply();
 
@@ -22,48 +20,33 @@ module.exports = {
 
 		Model.tryAddUser(user.id);
 
-		const userDB = Model.getUserAndClass(user.id);
-
-		const userInfo = {
-			username: user.username,
-			tag: user.tag.toString(),
-			id: user.id.toString(),
-			bio: userDB.bio,
-			avatar: user.avatarURL(),
-			coins: userDB.coins.toString(),
-			missions: userDB.missions_count.toString(),
-			color: active_color.color_hex,
-			class: {
-				name: userDB.class_name,
-				description: userDB.class_description
-			}
-		}
+		const userData = Model.getUserByID(interaction.user.id);
 
 		const profileEmbed = new EmbedBuilder({
-			title: `Informações de ${userInfo.tag}`,
-			description: `**Biografia:** \`${userInfo.bio}\`.`,
+			title: `Informações de ${user.tag}`,
+			description: `:bookmark_tabs: **Biografia:** \`${userData.bio}\`.`,
 			fields: [
 				{
-					name: "Moedas",
-					value: `:coin: ${userInfo.coins} Moedas.`
+					name: ":coin: Saldo",
+					value: `**${userData.coins}** Moedas.`
 				},
 				{
-					name: "Missões",
-					value: `\`${userInfo.tag}\` já concluiu ${userInfo.missions} missões.`
+					name: ":crossed_swords: Missões",
+					value: `**${userData.missionsCount}** missões concluídas.`
 				},
 				{
-					name: `Classe: ${userInfo.class.name}`,
-					value: userInfo.class.description
+					name: `:shield: Classe: ${userData.playerClass.name}`,
+					value: userData.playerClass.description
 				}
 			],
 			thumbnail: {
-				url: userInfo.avatar
+				url: user.avatarURL()
 			},
 			footer: {
-				text: `ID do Usuário: ${userInfo.id}`
+				text: `ID do Usuário: ${userData.id}`
 			}
 		});
-		profileEmbed.setColor(userInfo.color);
+		profileEmbed.setColor(userData.activeColor.hex);
 
 		await interaction.editReply({
 			embeds: [profileEmbed]

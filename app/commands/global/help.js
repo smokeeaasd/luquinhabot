@@ -7,7 +7,7 @@ module.exports = {
 		.setDescription("Lista de comandos."),
 
 	async execute(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
+		const userData = Model.getUserByID(interaction.user.id);
 		let commands = [];
 		for (let i of interaction.client.commands)
 		{
@@ -27,7 +27,7 @@ module.exports = {
 
 			fields: commands
 		});
-		commandList.setColor(active_color.color_hex);
+		commandList.setColor(userData.activeColor.hex);
 
 		await interaction.reply({
 			embeds: [commandList],

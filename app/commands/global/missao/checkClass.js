@@ -3,33 +3,29 @@ const { Model } = require("../../../database/model/dbModel.js")
 
 module.exports = {
 	async run(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
-		
-		async function classLevelUp(interaction, user, class_id) {
+		const userData = Model.getUserByID(interaction.user.id);
+
+		async function classLevelUp(interaction, oldUser, class_id) {
 			Model.setClass(interaction.user.id, class_id);
 
-			const newUser = Model.getUserAndClass(interaction.user.id);
+			const newUser = Model.getUserByID(interaction.user.id);
 
 			const ClassUpEmbed = new EmbedBuilder({
 				color: Colors.DarkPurple,
-				title: "Você subiu de classe!",
+				title: ":shield: Você subiu de classe!",
 				description: "Participe de missões para melhorar a sua classe!",
 				fields: [
 					{
-						name: `Nova classe: ${newUser.class_name}`,
-						value: `**Descrição:** *${newUser.class_description}*`
+						name: `:crossed_swords: Nova classe: ${newUser.playerClass.name}`,
+						value: `**Descrição:** *${newUser.playerClass.description}*`
 					},
 					{
-						name: "Multiplicador de Moedas:",
-						value: `~~${user.multiplier}~~ >> **${newUser.multiplier}**`
-					},
-					{
-						name: "Você ganhou um novo tema!",
-						value: "Veja em **/tema**"
+						name: ":coin: ultiplicador de Moedas:",
+						value: `${oldUser.multiplier} aumentou para **${newUser.multiplier}**`
 					}
 				]
 			});
-			ClassUpEmbed.setColor(active_color.color_hex);
+			ClassUpEmbed.setColor(userData.activeColor.hex);
 
 			await interaction.followUp({
 				embeds: [ClassUpEmbed],
@@ -37,33 +33,26 @@ module.exports = {
 			});
 		}
 
-		const user = Model.getUserAndClass(interaction.user.id);
-
 		if (Model.canClassUp(interaction.user.id)) {
 			switch (user.missions_count) {
 				case 10:
-					await classLevelUp(interaction, user, 2);
-					Model.addColorToUser(interaction.user.id, 2)
+					await classLevelUp(interaction, userData.playerClass, 2);
 				break;
 
 				case 20:
-					await classLevelUp(interaction, user, 3);
-					Model.addColorToUser(interaction.user.id, 3)
+					await classLevelUp(interaction, userData.playerClass, 3);
 				break;
 
 				case 50:
-					await classLevelUp(interaction, user, 4);
-					Model.addColorToUser(interaction.user.id, 4)
+					await classLevelUp(interaction, userData.playerClass, 4);
 				break;
 
 				case 100:
-					await classLevelUp(interaction, user, 5);
-					Model.addColorToUser(interaction.user.id, 5)
+					await classLevelUp(interaction, userData.playerClass, 5);
 				break;
 
 				case 200:
-					await classLevelUp(interaction, user, 6);
-					Model.addColorToUser(interaction.user.id, 6)
+					await classLevelUp(interaction, userData.playerClass, 6);
 				break;
 			}
 		}

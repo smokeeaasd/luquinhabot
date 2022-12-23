@@ -3,10 +3,10 @@ const { Model } = require("../../database/model/dbModel.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("google")
-		.setDescription("Realiza uma pesquisa Google.")
+		.setDescription("Realiza uma pesquisa Google para aquela pessoa lerda...")
 		.addStringOption((s) => {
 			s.setName("pesquisa")
-			s.setDescription("o que o seu amigo quer pesquisar")
+			s.setDescription("O que você quer pesquisar?")
 			s.setRequired(true)
 			s.setMaxLength(100)
 
@@ -14,7 +14,8 @@ module.exports = {
 		}),
 
 	async execute(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
+		const userData = Model.getUserByID(interaction.user.id);
+
 		let query = interaction.options.getString("pesquisa");
 		let searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
 
@@ -25,7 +26,7 @@ module.exports = {
 				{ name: "URL", value: searchUrl, }
 			]
 		});
-		searchEmbed.setColor(active_color.color_hex);
+		searchEmbed.setColor(userData.activeColor.hex);
 
 		await interaction.reply({
 			embeds: [searchEmbed]

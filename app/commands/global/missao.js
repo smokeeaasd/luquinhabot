@@ -6,12 +6,12 @@ module.exports = {
 		.setDescription("Gerenciar uma missão.")
 		.addSubcommand(subcmd => {
 			subcmd.setName("iniciar");
-			subcmd.setDescription("inicia uma nova missão");
+			subcmd.setDescription("Inicia uma nova missão");
 			return subcmd;
 		})
 		.addSubcommand(subcmd => {
 			subcmd.setName("coletar");
-			subcmd.setDescription("coletar recompensas de missão");
+			subcmd.setDescription("Coletar recompensas de missão");
 			return subcmd;
 		}),
 

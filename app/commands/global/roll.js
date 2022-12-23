@@ -14,17 +14,19 @@ module.exports = {
 			return number;
 		}),
 	async execute(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
+		const userData = Model.getUserByID(interaction.user.id);
 		
 		let number = interaction.options.getNumber("lados");
-		number = number ?? 6;
+
+		number ??= 6;
+
 		let roll = Math.floor(Math.random() * number) + 1;
 
 		const rollEmbed = new EmbedBuilder({
 			title: `Resultado: ${roll}`,
 			description: "Isso é bom ou ruim? É você quem decide."
 		});
-		rollEmbed.setColor(active_color.color_hex);
+		rollEmbed.setColor(userData.activeColor.hex);
 
 		await interaction.reply({
 			embeds: [rollEmbed]

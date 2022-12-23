@@ -3,14 +3,14 @@ const { Model } = require("../../../database/model/dbModel");
 
 module.exports = {
 	async execute(interaction) {
-		const avaliableColors = Model.getUserColors(interaction.user.id);
+		const userData = Model.getUserByID(interaction.user.id);
 
 		let colorsList = "";
-		avaliableColors.forEach(color => {
-			colorsList += `${color.emoji} Tema **${color.color_name}**\n`
+		userData.purchasedColors.forEach(color => {
+			// Primeira letra em maiúsculo
+			let colorName = color.name.charAt(0).toUpperCase() + color.name.slice(1);
+			colorsList += `${color.emoji} Tema **${colorName}**\n`
 		});
-
-		const active_color = Model.getUserActiveColor(interaction.user.id);
 
 		const ColorsEmbed = new EmbedBuilder({
 			title: "Seus temas",
@@ -18,12 +18,12 @@ module.exports = {
 			fields: [
 				{
 					name: "Como utilizar um tema?",
-					value: "Utilize /temas usar **tema**"
+					value: "Utilize /tema usar **tema**"
 				}
 			]
 		});
 
-		ColorsEmbed.setColor(active_color.color_hex);
+		ColorsEmbed.setColor(userData.activeColor.hex);
 
 		await interaction.reply({
 			embeds: [ColorsEmbed],

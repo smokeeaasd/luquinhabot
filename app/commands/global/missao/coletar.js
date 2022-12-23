@@ -1,11 +1,12 @@
 const { EmbedBuilder } = require("discord.js");
 const { Model } = require("../../../database/model/dbModel.js");
 const { TimeUtils } = require("../../../utils/time.js");
+const presente = require("./presente.js");
 
 module.exports = {
 	async run(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
-		const mission = Model.getUserMission(interaction.user.id);
+		const userData = Model.getUserByID(interaction.user.id);
+		const mission = userData.currentMission;
 
 		// se o usuário não estiver em nenhuma missão
 		if (mission == null) {
@@ -13,7 +14,7 @@ module.exports = {
 				title: "Você não está em uma missão",
 				description: "Utilize (/missao iniciar) para começar uma missão."
 			});
-			nullMissionEmbed.setColor(active_color.color_hex);
+			nullMissionEmbed.setColor(userData.activeColor.hex);
 
 			await interaction.reply({
 				embeds: [nullMissionEmbed]
@@ -22,8 +23,8 @@ module.exports = {
 			return;
 		} else {
 			// se a missão já acabou
-			if (Date.now() > mission.mission_finish) {
-				let reward = Math.ceil(((mission.duration_mins * 200) * (1 + Math.random())) * mission.multiplier);
+			if (mission.ended) {
+				let reward = Math.ceil(((mission.duration * 200) * (1 + Math.random())) * mission.duration);
 
 				const missionRewardEmbed = new EmbedBuilder({
 					title: "Missão concluída",
@@ -35,19 +36,19 @@ module.exports = {
 					description: "Parabéns, você completou a missão!",
 					fields: [
 						{
-							name: "Missão",
-							value: `${mission.mission_name}`
+							name: ":crossed_swords: Missão",
+							value: `${mission.name}`
 						},
 						{
-							name: "Recompensa",
-							value: `**${reward}$** com um Multiplicador **${mission.multiplier}x**`
+							name: ":coin: Recompensa",
+							value: `**${reward}$** com um Multiplicador **${userData.playerClass.multiplier}x**`
 						},
 					],
 					footer: {
-						text: `Você já completou ${mission.missions_count + 1} missões.`
+						text: `Você já completou ${userData.missionsCount + 1} missões.`
 					}
 				});
-				missionRewardEmbed.setColor(active_color.color_hex);
+				missionRewardEmbed.setColor(userData.activeColor.hex);
 
 				Model.addCoins(interaction.user.id, reward);
 				Model.completeMission(interaction.user.id);
@@ -55,11 +56,13 @@ module.exports = {
 					embeds: [missionRewardEmbed],
 				});
 
+				await presente.run(interaction);
+
 				const checkClass = require("./checkClass.js");
 
 				await checkClass.run(interaction);
 			} else {  // Se a missão ainda não acabou
-				let remaining = mission.mission_finish - Date.now() + 1000 // cooldown em ms + 1seg;
+				let remaining = mission.endTimestamp - Date.now() + 1000 // cooldown em ms + 1seg;
 
 				const inProgressEmbed = new EmbedBuilder({
 					title: "Você ainda não terminou a missão!",
@@ -68,7 +71,7 @@ module.exports = {
 						text: `Termina em ${TimeUtils.formatMS(remaining)}.`
 					}
 				});
-				inProgressEmbed.setColor(active_color.color_hex);
+				inProgressEmbed.setColor(userData.activeColor.hex);
 
 				await interaction.reply({
 					embeds: [inProgressEmbed],

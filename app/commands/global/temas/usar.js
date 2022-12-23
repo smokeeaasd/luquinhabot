@@ -3,32 +3,32 @@ const { Model } = require("../../../database/model/dbModel");
 
 module.exports = {
 	async execute(interaction) {
-		const active_color = Model.getUserActiveColor(interaction.user.id);
+		const userData = Model.getUserByID(interaction.user.id);
 
-		const theme = await interaction.options.getString("cor");
+		const theme = await interaction.options.getString("cor").toLowerCase();
 
 		const themeExists = Model.getColorByName(theme) != null;
 
-		const notUserColors = Model.getNotUserColors(interaction.user.id);
-
 		let userHasColor = true;
-		notUserColors.forEach(color => {
-			if (color.color_name == theme) {
+
+		userData.notPurchasedColors.forEach(color => {
+			if (color.name == theme) {
 				userHasColor = false;	
 			}
 		});
 
 		if (themeExists) {
 			const color = Model.getColorByName(theme);
+			let colorName = color.name.charAt(0).toUpperCase() + color.name.slice(1);
 
 			if (userHasColor) {
 				Model.changeUserColor(interaction.user.id, color.id);
 
 				const newColorEmbed = new EmbedBuilder({
-					title: `Agora você está utilizando o tema ${color.color_name}`,
+					title: `Tema selecionado: ${colorName} ${color.emoji}`,
 					description: "Você pode trocar o tema a qualquer momento com **/tema usar**"
 				});
-				newColorEmbed.setColor(color.color_hex);
+				newColorEmbed.setColor(color.hex);
 
 				await interaction.reply({
 					embeds: [newColorEmbed],
@@ -36,9 +36,9 @@ module.exports = {
 				});
 			} else {
 				const userHasNotColor = new EmbedBuilder({
-					title: `Você não pode utilizar o tema ${color.color_name}`
+					title: `Você não pode utilizar o tema ${colorName}`
 				});
-				userHasNotColor.setColor(color.color_hex);
+				userHasNotColor.setColor(userData.activeColor.hex);
 
 				await interaction.reply({
 					embeds: [userHasNotColor],
@@ -50,7 +50,7 @@ module.exports = {
 				title: "Temos um problema!",
 				description: "Essa cor não existe!"
 			});
-			colorNotExists.setColor(active_color.color_hex);
+			colorNotExists.setColor(userData.activeColor.hex);
 
 			await interaction.reply({
 				embeds: [colorNotExists],

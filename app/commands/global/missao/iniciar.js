@@ -3,11 +3,11 @@ const { Model } = require('../../../database/model/dbModel.js');
 const { TimeUtils } = require("../../../utils/time.js");
 module.exports = {
 	async run(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
+		const userData = Model.getUserByID(interaction.user.id);
 
-		if (Model.isUserInMission(interaction.user.id)) {
-			const mission = Model.getUserMission(interaction.user.id);
-			let remaining = mission.mission_finish - Date.now() + 1000 // cooldown em ms + 1seg;
+		if (userData.currentMission != null) {
+			const mission = userData.currentMission;
+			let remaining = mission.endTimestamp - Date.now() + 1000 // cooldown em ms + 1seg;
 
 			const alreadyAtMissionEmbed = new EmbedBuilder({
 				title: "Você já está em uma missão!",
@@ -16,7 +16,7 @@ module.exports = {
 					text: (remaining > 0) ? `Termina em ${TimeUtils.formatMS(remaining)}.` : "Utilize (/missao coletar) para coletar as recompensas da missão"
 				}
 			});
-			alreadyAtMissionEmbed.setColor(active_color.color_hex);
+			alreadyAtMissionEmbed.setColor(userData.activeColor.hex);
 
 			await interaction.reply({
 				embeds: [alreadyAtMissionEmbed]
@@ -26,7 +26,6 @@ module.exports = {
 		}
 
 		let randomMission = Model.getRandomMission();
-		let user = Model.getUserAndClass(interaction.user.id);
 
 		const startMissionEmbed = new EmbedBuilder({
 			title: "Você entrou em uma missão!",
@@ -35,33 +34,33 @@ module.exports = {
 				height: 512,
 				width: 512
 			},
-			description: `Duração: **${randomMission.duration_mins} minutos**`,
+			description: `:hourglass: Duração: **${randomMission.duration} minutos**`,
 			fields: [
 				{
-					name: "Missão",
-					value: `${await randomMission.mission_name}`,
+					name: ":crossed_swords: Missão",
+					value: `${await randomMission.name}`,
 					inline: false
 				},
 				{
-					name: "Descrição",
-					value: `*${await randomMission.mission_description}*`
+					name: ":page_with_curl: Descrição",
+					value: `${await randomMission.description}`
 				},
 				{
-					name: `Classe: ${user.class_name}`,
-					value: `*${user.class_description}*`
+					name: `:shield: Classe: ${userData.playerClass.name}`,
+					value: `${userData.playerClass.description}`
 				}
 			],
 			footer: {
 				text: "Utilize (/missao coletar) para coletar recompensas da missão"
 			}
 		});
-		startMissionEmbed.setColor(active_color.color_hex);
+		startMissionEmbed.setColor(userData.activeColor.hex);
 
 		await interaction.reply({
 			embeds: [startMissionEmbed]
 		});
 
 		// add usuario em User_Missions
-		Model.addMissionToUser(interaction.user.id, randomMission.id, (Date.now() + (randomMission.duration_mins * 1000 * 60)));
+		Model.addMissionToUser(interaction.user.id, randomMission.id, (Date.now() + (randomMission.duration * 1000 * 60)));
 	}
 }

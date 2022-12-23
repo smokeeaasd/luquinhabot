@@ -14,7 +14,7 @@ module.exports = {
 			return bio;
 		}),
 	async execute(interaction) {
-		let active_color = Model.getUserActiveColor(interaction.user.id);
+		const userData = Model.getUserByID(interaction.user.id);
 		
 		let bio = interaction.options.getString("bio");
 		
@@ -24,7 +24,7 @@ module.exports = {
 			title: "A sua bio foi alterada!",
 			description: `\`${bio}\``
 		});
-		changedBioEmbed.setColor(active_color.color_hex)
+		changedBioEmbed.setColor(userData.activeColor.hex);
 
 		await interaction.reply({	
 			embeds: [changedBioEmbed],
