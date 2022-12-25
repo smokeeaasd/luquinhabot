@@ -1,9 +1,22 @@
-const { EmbedBuilder, ActionRowBuilder, ComponentType, ButtonStyle, ButtonBuilder } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonStyle, ButtonBuilder } = require("discord.js");
+
 const { Model } = require("../../../database/model/dbModel");
+
+const { UserValidator } = require("../../commandUtils/UserValidator");
+const { CommonMessages } = require("../../commandUtils/CommonMessages");
 
 module.exports = {
 	async run(interaction) {
 		const user = interaction.options.getUser("usuario");
+
+		if (UserValidator.isRegistered(user.id))
+		{
+			return await interaction.reply({
+				content: CommonMessages.notRegisteredUser,
+				ephemeral: true
+			});
+		}
+		
 		const userData = Model.getUserByID(interaction.user.id);
 
 		// enviar para si mesmo

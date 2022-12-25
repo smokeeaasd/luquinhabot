@@ -5,7 +5,7 @@ module.exports = {
 		let presente = Math.random() <= 0.7;
 
 		if (presente) {
-			let giftmsg = await interaction.channel.send(`:gift: | <@${interaction.user.id}> encontrou um **Caixa Misteriosa** ao finalizar uma missão!`);
+			let giftmsg = await interaction.channel.send(`:gift: | <@${interaction.user.id}> encontrou uma **Caixa Misteriosa** ao finalizar uma missão!`);
 			
 			setTimeout(async () => {
 				try {

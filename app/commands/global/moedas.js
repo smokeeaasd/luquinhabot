@@ -6,18 +6,40 @@ const enviar = require("./moedas/enviar");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("moedas")
+		.setNameLocalizations({
+			"en-US": "coins"
+		})
+
 		.setDescription("Gerenciar as suas moedas")
-		.addSubcommand(ver => {
-			ver.setName("saldo");
-			ver.setDescription("Ver o saldo de um usuário")
-			ver.addUserOption(user => {
+		.setDescriptionLocalizations({
+			"en-US": "Manage your coins"
+		})
+		.addSubcommand(saldo => {
+			saldo.setName("saldo");
+			saldo.setNameLocalizations({
+				"en-US": "bal"
+			});
+
+			saldo.setDescription("Ver o saldo de um usuário")
+			saldo.setDescriptionLocalizations({
+				"en-US": "View a user's balance"
+			});
+
+			saldo.addUserOption(user => {
 				user.setName("usuario");
+				user.setNameLocalizations({
+					"en-US": "user"
+				});
+
 				user.setDescription("Escolha um usuário");
+				user.setDescriptionLocalizations({
+					"en-US": "Choose a user"
+				})
 
 				return user;
 			})
 
-			return ver;
+			return saldo;
 		})
 		.addSubcommand(enviar => {
 			enviar.setName("enviar");

@@ -5,12 +5,12 @@ module.exports = {
 	async run(interaction) {
 		const userData = Model.getUserByID(interaction.user.id);
 
-		const amount = interaction.options.getNumber("quantia");
+		const amount = interaction.options.getInteger("quantia");
 
 		if (userData.gifts >= amount) {
 			let prizes = {
 				trash: {
-					name: ":poop: Lixo... acho que não vale nada!",
+					name: ":poop: Lixo... acho que não vale muita coisa!",
 					qnt: 0
 				},
 				coins5k: {
@@ -49,8 +49,8 @@ module.exports = {
 				rewardList += `${prizes[key].name} **${prizes[key].qnt}x**\n`
 			});
 
-			let totalCoins = ((prizes.coins5k?.qnt * 5000) + (prizes.coins70k?.qnt ?? 0) * 70000);
-
+			let totalCoins = ((prizes.coins5k?.qnt * 5000) + (prizes.coins70k?.qnt ?? 0) * 70000) + ((prizes.trash?.qnt ?? 0) * 250);
+			
 			Model.addCoins(interaction.user.id, totalCoins);
 			Model.removeGiftFromUser(interaction.user.id, amount);
 
@@ -70,7 +70,7 @@ module.exports = {
 
 			rewardEmbed.setColor(userData.activeColor.hex);
 
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [rewardEmbed]
 			});
 		} else {
@@ -87,7 +87,7 @@ module.exports = {
 
 			tooMuchGifts.setColor(userData.activeColor.hex);
 
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [tooMuchGifts]
 			});
 		}

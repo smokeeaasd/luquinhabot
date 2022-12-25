@@ -4,7 +4,13 @@ const { Model } = require("../../database/model/dbModel.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("ajuda")
-		.setDescription("Lista de comandos."),
+		.setNameLocalizations({
+			"en-US": "help"
+		})
+		.setDescription("Ver a lista de comandos.")
+		.setDescriptionLocalizations({
+			"en-US": "View command list"
+		}),
 
 	async execute(interaction) {
 		const userData = Model.getUserByID(interaction.user.id);

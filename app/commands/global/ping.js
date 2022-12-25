@@ -4,7 +4,10 @@ const { Model } = require("../../database/model/dbModel.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("ping")
-		.setDescription("Verificar a latência do bot"),
+		.setDescription("Verificar a latência do bot")
+		.setDescriptionLocalizations({
+			"en-US": "Check bot latency"
+		}),
 
 	async execute(interaction) {
 		const userData = Model.getUserByID(interaction.user.id);

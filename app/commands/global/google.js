@@ -3,12 +3,25 @@ const { Model } = require("../../database/model/dbModel.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("google")
+
 		.setDescription("Realiza uma pesquisa Google para aquela pessoa lerda...")
+		.setDescriptionLocalizations({
+			"en-US": "Do a Google search for that kinda slow person"
+		})
+
 		.addStringOption((s) => {
-			s.setName("pesquisa")
-			s.setDescription("O que você quer pesquisar?")
-			s.setRequired(true)
-			s.setMaxLength(100)
+			s.setName("pesquisa");
+			s.setNameLocalizations({
+				"en-US": "query"
+			});
+			
+			s.setDescription("O que você quer pesquisar?");
+			s.setDescriptionLocalizations({
+				"en-US": "What do you want to search?"
+			});
+
+			s.setRequired(true);
+			s.setMaxLength(100);
 
 			return s;
 		}),

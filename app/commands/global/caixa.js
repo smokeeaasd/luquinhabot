@@ -6,14 +6,35 @@ const quantia = require("./caixa/quantidade.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("caixa")
+		.setNameLocalizations({
+			"en-US": "box"
+		})
 		.setDescription("Gerenciar suas caixas misteriosas")
+		.setDescriptionLocalizations({
+			"en-US": "Manage your mystery boxes"
+		})
 		.addSubcommand(subcmd => {
 			subcmd.setName("abrir");
-			subcmd.setDescription("Abrir caixas misteriosas");
+			subcmd.setNameLocalizations({
+				"en-US": "open"
+			});
 
-			subcmd.addNumberOption(qnt => {
+			subcmd.setDescription("Abrir caixas misteriosas");
+			subcmd.setDescriptionLocalizations({
+				"en-US": "Open your mystery boxes"
+			});
+
+			subcmd.addIntegerOption(qnt => {
 				qnt.setName("quantia");
+				qnt.setNameLocalizations({
+					"en-US": "amount"
+				});
+
 				qnt.setDescription("Quantidade de caixas para abrir");
+				qnt.setDescriptionLocalizations({
+					"en-US": "Number of boxes to be opened"
+				});
+
 				qnt.setMinValue(1);
 				qnt.setRequired(true);
 
@@ -34,6 +55,7 @@ module.exports = {
 		switch (subCommand)
 		{
 			case "abrir":
+				await interaction.deferReply();
 				abrir.run(interaction);
 			break;
 

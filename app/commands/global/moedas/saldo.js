@@ -1,10 +1,19 @@
 const { Model } = require("../../../database/model/dbModel");
 
+const { UserValidator } = require("../../commandUtils/UserValidator.js");
+const { CommonMessages } = require("../../commandUtils/CommonMessages.js");
+
 module.exports = {
 	async run(interaction) {
 		const user = interaction.options.getUser("usuario") ?? interaction.user;
 
-		Model.tryAddUser(user.id);
+		if (!UserValidator.isRegistered(user.id))
+		{
+			return await interaction.reply({
+				content: CommonMessages.notRegisteredUser,
+				ephemeral: true
+			});
+		}
 
 		const userData = Model.getUserByID(user.id);
 

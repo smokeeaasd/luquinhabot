@@ -4,10 +4,26 @@ const { Model } = require("../../database/model/dbModel.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("sobremim")
-		.setDescription("Alterar a sua bio.")
+		.setNameLocalizations({
+			"en-US": "aboutme"
+		})
+		
+		.setDescription("Alterar a sua bio")
+		.setDescriptionLocalizations({
+			"en-US": "Change your status"
+		})
+
 		.addStringOption(bio => {
 			bio.setName("bio");
-			bio.setDescription("Sua bio.")
+			bio.setNameLocalizations({
+				"en-US": "status"
+			});
+
+			bio.setDescription("Sua bio");
+			bio.setDescriptionLocalizations({
+				"en-US": "Your status"
+			});
+
 			bio.setMinLength(3);
 			bio.setMaxLength(32);
 			bio.setRequired(true);

@@ -5,7 +5,11 @@ const { TimeUtils } = require("../../utils/time.js");
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("daily")
-		.setDescription("coletar a recompensa diária"),
+
+		.setDescription("Coletar a recompensa diária")
+		.setDescriptionLocalizations({
+			"en-US": "Collect the daily reward (UTC-3)"
+		}),
 	async execute(interaction) {
 		const userData = Model.getUserByID(interaction.user.id);
 

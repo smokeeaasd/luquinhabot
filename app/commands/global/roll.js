@@ -3,11 +3,27 @@ const { Model } = require("../../database/model/dbModel.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("roll")
-		.setDescription("Girar um dado.")
-		.addNumberOption((number) => {
+		.setName("dado")
+		.setNameLocalizations({
+			"en-US": "dice"
+		})
+
+		.setDescription("Girar um dado")
+		.setDescriptionLocalizations({
+			"en-US": "Spin a dice"
+		})
+
+		.addIntegerOption((number) => {
 			number.setName("lados");
-			number.setDescription("Número de lados do dado.")
+			number.setNameLocalizations({
+				"en-US": "sides"
+			});
+
+			number.setDescription("Número de lados do dado");
+			number.setDescriptionLocalizations({
+				"en-US": "Number of sides"
+			});
+
 			number.setMinValue(3);
 			number.setMaxValue(100);
 

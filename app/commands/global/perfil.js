@@ -1,30 +1,55 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { Model } = require("../../database/model/dbModel.js");
+const { UserValidator } = require("../commandUtils/UserValidator.js");
+const { CommonMessages } = require("../commandUtils/commonMessages.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("perfil")
+		.setNameLocalizations({
+			"en-US": "profile"
+		})
+
 		.setDescription("Verificar o perfil de um usuário.")
+		.setDescriptionLocalizations({
+			"en-US": "View a user's profile"
+		})
+		
 		.addUserOption(user => {
 			user.setName("usuario");
+			user.setNameLocalizations({
+				"en-US": "user"
+			});
+
 			user.setDescription("Escolha um usuário");
+			user.setDescriptionLocalizations({
+				"en-US": "Choose an user"
+			});
+
 			return user;
 		}),
 	
 	/** @param {import("discord.js").Interaction} interaction */
 	async execute(interaction) {
-		// A interação pode levar mais tempo para resposta.
-		await interaction.deferReply();
 
 		const user = interaction.options.getUser("usuario") ?? interaction.user;
 
-		Model.tryAddUser(user.id);
+		if (!UserValidator.isRegistered(user.id))
+		{
+			return await interaction.reply({
+				content: CommonMessages.notRegisteredUser,
+				ephemeral: true
+			});
+		}
+		
+		// A partir daqui, a interação leva mais tempo para ser respondida
+		await interaction.deferReply();
 
-		const userData = Model.getUserByID(interaction.user.id);
+		const userData = Model.getUserByID(user.id);
 
 		const profileEmbed = new EmbedBuilder({
 			title: `Informações de ${user.tag}`,
-			description: `:bookmark_tabs: **Biografia:** \`${userData.bio}\`.`,
+			description: `:bookmark_tabs: **Biografia:** \`${userData.bio ?? "vazio"}\``,
 			fields: [
 				{
 					name: ":coin: Saldo",
@@ -49,7 +74,8 @@ module.exports = {
 		profileEmbed.setColor(userData.activeColor.hex);
 
 		await interaction.editReply({
-			embeds: [profileEmbed]
+			embeds: [profileEmbed],
+			ephemeral: false
 		});
 	}
 }
