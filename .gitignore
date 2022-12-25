@@ -1,3 +1,6 @@
 node_modules
 teste.js
 squerecloud.app
+app/database/comandos.sqlite3
+app/database/luquinha.sqlite
+app/build

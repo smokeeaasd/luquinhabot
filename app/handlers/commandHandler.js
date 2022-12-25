@@ -2,6 +2,7 @@ const { Collection } = require("discord.js");
 
 const fs = require("node:fs");
 const path = require("node:path");
+const { AppLogger } = require("../utils/logger");
 
 module.exports = {
     async run(client) {
@@ -24,16 +25,16 @@ module.exports = {
 			}
 		];
 
+		AppLogger.send(`Carregando arquivos de comandos`);
 		for (const commandFile of commandFiles)
 		{
 			for (const file of commandFile.files)
 			{
-				console.log(`[${new Date().toUTCString()}] Carregando ${file}`);
 				const filePath = path.join(commandFile.path, file);
 				const command = require(filePath);
 				client.commands.set(command.data.name, command);
-				console.log(`[${new Date().toUTCString()}] ${file} foi carregado!`);
 			}
 		}
+		AppLogger.send(`Arquivos de comandos foram carregados`);
     }
 }

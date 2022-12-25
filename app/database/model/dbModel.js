@@ -20,27 +20,36 @@ class Model {
 	}
 
 	static getUserByID(user_id) {
-		let user = dbHelper.getUserAndClass(user_id);
+		const userByID = dbHelper.getUserAndClass(user_id) ?? false;
 
-		return new Lukinha.Player(
-			user.disc_id,
-			user.bio,
-			user.coins,
-			user.gifts,
-			user.last_daily,
-			user.missions_count,
+		const player = new Lukinha.Player(
+			userByID.disc_id,
+			userByID.bio,
+			userByID.coins,
+			userByID.gifts,
+			userByID.last_daily,
+			userByID.missions_count,
 			this.getUserMission(user_id),
-			this.getColorById(user.active_color_id),
-			this.getClassByID(user.class_id),
+			this.getColorById(userByID.active_color_id),
+			this.getClassByID(userByID.class_id),
 			this.getUserColors(user_id),
 			this.getNotUserColors(user_id)
 		)
+
+		return (userByID) ? player : null
 	}
 
 	static getColorById(color_id) {
-		const color = dbHelper.getColorById(color_id);
+		const colorByID = dbHelper.getColorById(color_id) ?? false;
 
-		return new Lukinha.Color(color.id, color.color_name, color.emoji, color.color_hex);
+		const color = new Lukinha.Color(
+			colorByID.id,
+			colorByID.color_name,
+			colorByID.emoji,
+			colorByID.color_hex
+		);
+
+		return (colorByID) ? color : null;
 	}
 
 	static getColorByName(color_name) {
@@ -57,7 +66,7 @@ class Model {
 	}
 
 	static getUserColors(user_id) {
-		let userColors = dbHelper.getUserColors(user_id);
+		const userColors = dbHelper.getUserColors(user_id) ?? [];
 		let colorsList = [];
 
 		for (const userColor of userColors) {
@@ -75,7 +84,7 @@ class Model {
 	}
 
 	static getNotUserColors(user_id) {
-		let userColors = dbHelper.getNotUserColors(user_id);
+		let userColors = dbHelper.getNotUserColors(user_id) ?? [];
 		let colorsList = [];
 
 		for (const userColor of userColors) {
@@ -96,9 +105,9 @@ class Model {
 	}
 
 	static addColorToUser(user_id, color_id) {
-		let colors = dbHelper.getUserColors(user_id);
+		const colors = dbHelper.getUserColors(user_id) ?? [];
 
-		for (let color of colors) {
+		for (const color of colors) {
 			if (color.id == color_id) {
 				return;
 			}
@@ -121,13 +130,13 @@ class Model {
 	}
 
 	static getMissionByID(mission_id) {
-		const mission = dbHelper.getMissionByID(mission_id) ?? false;
+		const missionByID = dbHelper.getMissionByID(mission_id);
 
 		return new Lukinha.Mission(
-			mission.id,
-			mission.mission_name,
-			mission.mission_description,
-			mission.duration_mins,
+			missionByID.id,
+			missionByID.mission_name,
+			missionByID.mission_description,
+			missionByID.duration_mins,
 		);
 	}
 
@@ -164,21 +173,43 @@ class Model {
 	}
 
 	static getClasses() {
-		return dbHelper.getClasses();
+		const classes = dbHelper.getClasses();
+
+		let classList = [];
+
+		classes.map((_class) => {
+			classList.push(
+				new Lukinha.Class(
+					_class.id,
+					_class.class_name,
+					_class.class_description,
+					_class.multiplier
+				)
+			)
+		});
+
+		return classList;
 	}
 
 	static canClassUp(id) {
-		let user = dbHelper.getUserAndClass(id);
+		const user = dbHelper.getUserAndClass(id);
 
-		let classes = this.getClasses();
+		const classes = this.getClasses();
 
 		return (user.class_id < classes.length);
 	}
 
 	static getClassByID(class_id) {
-		const _class = dbHelper.getClassByID(class_id);
+		const classByID = dbHelper.getClassByID(class_id) ?? false;
 
-		return new Lukinha.Class(_class.id, _class.class_name, _class.class_description, _class.multiplier);
+		const _class = new Lukinha.Class(
+			classByID.id,
+			classByID.class_name,
+			classByID.class_description,
+			classByID.multiplier
+		);
+
+		return (classByID) ? _class : null
 	}
 
 	static setClass(user_id, class_id) {
