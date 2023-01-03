@@ -29,3 +29,5 @@ class Project {
 module.exports = {
 	Project
 }
+
+console.log(`${Project.getLineCount('DSHub')} Linhas`);

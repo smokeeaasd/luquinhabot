@@ -1,6 +1,7 @@
 node_modules
-teste.js
+package-lock.json
 squerecloud.app
+app/config.json
 app/database/comandos.sqlite3
 app/database/luquinha.sqlite
 app/build

@@ -19,6 +19,11 @@ class Model {
 		}
 	}
 
+	static updateAutoRole(server_id, role_id)
+	{
+		dbHelper.updateAutorole(server_id, role_id);
+	}
+
 	static getUserByID(user_id) {
 		const userByID = dbHelper.getUserAndClass(user_id) ?? false;
 
@@ -226,6 +231,29 @@ class Model {
 
 	static removeGiftFromUser(user_id, amount) {
 		dbHelper.removeGiftFromUser(user_id, amount);
+	}
+
+	static banUser(user_id, reason)
+	{
+		this.tryRemoveUser(user_id);
+		dbHelper.banUser(user_id, reason);
+	}
+
+	static unbanUser(user_id)
+	{
+		dbHelper.unbanUser(user_id);
+	}
+
+	static getBannedUser(user_id)
+	{
+		const bannedUserByID = dbHelper.getBannedUser(user_id) ?? false;
+
+		const bannedUser = new Lukinha.BannedPlayer(
+			bannedUserByID.id,
+			bannedUserByID.reason
+		);
+
+		return (bannedUserByID) ? bannedUser : null;
 	}
 }
 

@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { Model } = require("../../database/model/dbModel");
 const saldo = require("./moedas/saldo");
 const enviar = require("./moedas/enviar");
 
@@ -51,7 +50,7 @@ module.exports = {
 
 				return user;
 			});
-			enviar.addNumberOption(number => {
+			enviar.addIntegerOption(number => {
 				number.setName("quantia");
 				number.setDescription("Quantia de moedas para enviar.");
 				number.setRequired(true);

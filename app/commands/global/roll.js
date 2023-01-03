@@ -10,7 +10,7 @@ module.exports = {
 
 		.setDescription("Girar um dado")
 		.setDescriptionLocalizations({
-			"en-US": "Spin a dice"
+			"en-US": "Roll a dice"
 		})
 
 		.addIntegerOption((number) => {
@@ -32,7 +32,7 @@ module.exports = {
 	async execute(interaction) {
 		const userData = Model.getUserByID(interaction.user.id);
 		
-		let number = interaction.options.getNumber("lados");
+		let number = interaction.options.getInteger("lados");
 
 		number ??= 6;
 

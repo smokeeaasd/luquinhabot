@@ -1,4 +1,4 @@
-const { UserValidator } = require("../app/commands/modules/UserValidator.js");
+const { UserValidator } = require("../app/commands/commandUtils/UserValidator.js");
 const { Model } = require("../app/database/model/dbModel.js");
 
 let id = "637679977361309715";

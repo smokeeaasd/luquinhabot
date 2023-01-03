@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { Model } = require("../../database/model/dbModel");
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("tema")
@@ -62,7 +62,7 @@ module.exports = {
 				listarTema.execute(interaction);
 			break;
 
-			case "usar":
+			case "definir":
 				const usarTema = require("./temas/usar.js");
 				usarTema.execute(interaction);
 			break;

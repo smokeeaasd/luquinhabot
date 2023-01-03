@@ -1,5 +1,7 @@
-const { Events } = require("discord.js");
+const { Events, PermissionsBitField } = require("discord.js");
 const { Model } = require("../database/model/dbModel");
+const { CommonMessages } = require("../commands/modules/CommonMessages.js");
+
 const path = require("path");
 const fs = require("fs");
 
@@ -12,42 +14,54 @@ module.exports = {
 	 * @param {import("discord.js").Interaction} interaction 
 	 */
 	async execute(interaction) {
+		/**
+		 * @type {Readonly<PermissionsBitField>}
+		 */
+		const botChannelPermissions = interaction.channel.permissionsFor(interaction.client.user.id);
+		if (!botChannelPermissions.has("SendMessages")) {
+			return await interaction.reply({
+				content: ":x: | Para que os meus comandos funcionem, preciso da permissão de `Enviar Mensagens` nesse canal.",
+				ephemeral: true
+			});
+		}
+		if (!botChannelPermissions.has("EmbedLinks")) {
+			return await interaction.reply({
+				content: ":x: | Para que os meus comandos funcionem, preciso da permissão de `Embed Links` nesse canal.",
+				ephemeral: true
+			});
+		}
 		Model.tryAddUser(interaction.user.id);
 
-		if (interaction.isButton())
-		{
-			const buttonsPath = path.join(__dirname, 'buttons');
-			const buttonFiles = fs.readdirSync(buttonsPath).filter(file => file.endsWith('.js'));
+		if (interaction.isButton()) {
+			const bannedUser = Model.getBannedUser(interaction.user.id);
 
-			for (const buttonFile of buttonFiles)
-			{
-				const button = require(path.join(buttonsPath, buttonFile));
-
-				if (button.constantId)
-				{
-					if (interaction.customId == button.id)
-					{
-						await button.execute(interaction, ...args);
-					}
-				} else {
-					await button.execute(interaction);
-				}
+			if (bannedUser != null) {
+				return await interaction.reply({
+					content: CommonMessages.bannedInteractionAuthor.concat(`\n**Motivo da punição**: ${bannedUser.reason}`),
+					ephemeral: true
+				});
 			}
-			return;
 		}
-		
-		if (!interaction.isChatInputCommand())
-			return
 
-		const command = interaction.client.commands.get(interaction.commandName);
+		if (interaction.isChatInputCommand()) {
+			const bannedUser = Model.getBannedUser(interaction.user.id);
 
-		if (!command) return;
+			if (bannedUser != null) {
+				return await interaction.reply({
+					content: CommonMessages.bannedInteractionAuthor.concat(`\n**Motivo da punição**: ${bannedUser.reason}`),
+					ephemeral: true
+				});
+			}
+			const command = interaction.client.commands.get(interaction.commandName);
 
-		try {
-			await command.execute(interaction);
-		} catch (error) {
-			console.error(error);
-			await interaction.reply({ content: 'Ocorreu um erro na execução do comando.', ephemeral: true });
+			if (!command) return;
+
+			try {
+				await command.execute(interaction);
+			} catch (error) {
+				console.error(error);
+				await interaction.reply({ content: 'Ocorreu um erro na execução do comando.', ephemeral: true });
+			}
 		}
 	}
 }

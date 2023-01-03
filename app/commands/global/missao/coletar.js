@@ -24,7 +24,11 @@ module.exports = {
 		} else {
 			// se a missão já acabou
 			if (mission.ended) {
-				let reward = Math.ceil(((mission.duration * 200) * (1 + Math.random())) * mission.duration);
+				let reward = Math.ceil(
+					((
+						(mission.duration * 200) * (1 + Math.random())
+					) * mission.duration) * userData.playerClass.multiplier
+				);
 
 				const missionRewardEmbed = new EmbedBuilder({
 					title: "Missão concluída",
@@ -41,7 +45,7 @@ module.exports = {
 						},
 						{
 							name: ":coin: Recompensa",
-							value: `**${reward}$** com um Multiplicador **${userData.playerClass.multiplier}x**`
+							value: `**${reward}$** usando um multiplicador **${userData.playerClass.multiplier}x**`
 						},
 					],
 					footer: {

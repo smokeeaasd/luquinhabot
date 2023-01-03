@@ -50,10 +50,10 @@ class dbHelper {
 			[
 				db.prepare("DELETE FROM User_Colors WHERE id_user = @id"),
 				{ id: id }
-			]
+			],
 			[
-			db.prepare("DELETE FROM Users WHERE id = @id"),
-			{ id: id }
+				db.prepare("DELETE FROM Users WHERE id = @id"),
+				{ id: id }
 			]
 		);
 	}
@@ -97,7 +97,7 @@ class dbHelper {
 					VALUES (@id, @color_id)`),
 				{ id: id, color_id: color_id }
 			],
-		)
+		);
 	}
 
 	static changeUserColor(id, color_id) {
@@ -110,7 +110,7 @@ class dbHelper {
 				),
 				{ id: id, color_id: color_id }
 			]
-		)
+		);
 	}
 
 	/** Receber a lista de missões */
@@ -163,7 +163,8 @@ class dbHelper {
 	 * Retornar missões do usuário.
 	 * @param {String} id 
 	 */
-	static getUserMission(id) {;
+	static getUserMission(id) {
+		;
 		return db.prepare(
 			`SELECT m.*, um.*, u.*, c.* from User_Mission um
 			JOIN Mission m on (um.mission_id = m.id)
@@ -213,8 +214,7 @@ class dbHelper {
 		);
 	}
 
-	static getMissionByID(id)
-	{
+	static getMissionByID(id) {
 		db.prepare(
 			`SELECT * FROM Mission
 			WHERE id = ?
@@ -235,7 +235,7 @@ class dbHelper {
 					WHERE id = @id`),
 				{ coins: coins, id: id }
 			]
-		)
+		);
 	}
 
 	/**
@@ -295,7 +295,7 @@ class dbHelper {
 					WHERE id = @id`),
 				{ last_daily: Date.now(), id: id }
 			]
-		)
+		);
 	}
 
 	/**
@@ -311,14 +311,14 @@ class dbHelper {
 					WHERE @id = id`),
 				{ id: id }
 			]
-		)
+		);
 	}
 
 	/**
 	 * Remove uma quantia de presentes para um usuário
 	 * @param {String} id 
 	 * @param {Number} amount
-	 */	
+	 */
 	static removeGiftFromUser(id, amount) {
 		this.runTransaction(
 			[
@@ -328,7 +328,47 @@ class dbHelper {
 					WHERE @id = id`),
 				{ id: id, amount: amount }
 			]
-		)
+		);
+	}
+
+	/**
+	 * Adiciona um usuário a lista de banidos.
+	 * @param {String} id 
+	 * @param {String} reason 
+	 */
+	static banUser(id, reason) {
+		this.runTransaction(
+			[
+				db.prepare(
+					`INSERT INTO Banned_Users(id, reason)
+					VALUES(@id, @reason)`),
+				{ id: id, reason: reason }
+			]
+		);
+	}
+
+	/**
+	 * Remove um usuário da lista de banidos.
+	 * @param {String} id 
+	 * @param {String} reason 
+	 */
+	static unbanUser(id) {
+		this.runTransaction(
+			[
+				db.prepare(
+					`DELETE FROM Banned_Users
+					WHERE id = @id`),
+				{ id: id }
+			]
+		);
+	}
+
+	/**
+	 * Retorna um usuário banido, se existir
+	 * @param {String} id 
+	 */
+	static getBannedUser(id) {
+		return db.prepare("SELECT * FROM Banned_Users WHERE id = ?").get(id);
 	}
 }
 

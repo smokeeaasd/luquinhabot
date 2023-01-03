@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { Model } = require("../../database/model/dbModel.js");
-const { UserValidator } = require("../commandUtils/UserValidator.js");
-const { CommonMessages } = require("../commandUtils/commonMessages.js");
+const { UserValidator } = require("../modules/UserValidator.js");
+const { CommonMessages } = require("../modules/commonMessages.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
